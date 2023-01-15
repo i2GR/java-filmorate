@@ -1,2 +1,16 @@
-package ru.yandex.practicum.filmorate.model;public class User {
+package ru.yandex.practicum.filmorate.model;
+
+import jdk.jfr.DataAmount;
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
+public class User {
+
+    final private int id;
+    private String email;
+    private String login;
+    private String name;
+    private LocalDate birthday;
 }
