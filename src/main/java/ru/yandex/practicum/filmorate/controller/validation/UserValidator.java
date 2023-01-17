@@ -2,14 +2,18 @@ package ru.yandex.practicum.filmorate.controller.validation;
 
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.time.LocalDate;
+
 public class UserValidator {
 
     public static User validate(User user) throws ValidationException {
+        if (user == null) throw new ValidationException("null object received");
         StringValidator.checkEmpty(user.getEmail(), "User.email");
         StringValidator.checkEmpty(user.getLogin(), "User.login");
         checkEmail(user.getEmail());
         checkLogin(user.getLogin());
         user.setName(checkName(user));
+        checkBirthday(user.getBirthday());
         return user;
     }
 
@@ -26,7 +30,11 @@ public class UserValidator {
     }
 
     private static String checkName(User user) {
-        return (user.getName().isBlank()) ? user.getEmail() : user.getName();
+        return (user.getName().isBlank() || user.getName() == null) ? user.getLogin() : user.getName();
+    }
+
+    private static void checkBirthday(LocalDate date) throws ValidationException {
+        if (date.isAfter(LocalDate.now())) throw new ValidationException("incorrect birthday with future value");
     }
 
 }

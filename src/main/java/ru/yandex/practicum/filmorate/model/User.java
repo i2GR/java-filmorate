@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jdk.jfr.DataAmount;
 import lombok.Data;
 
 import java.time.LocalDate;

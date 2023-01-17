@@ -1,22 +1,44 @@
 <configuration>
+    <!--timestamp key="byTime" datePattern="yyyy-MM-dd'T'HH-mm-ss"/-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
         </encoder>
     </appender>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>src/main/resources/logs/filmorate.log</file>
+    <appender name="FilmControllerLog" class="ch.qos.logback.core.FileAppender">
+        <file>src/main/resources/logs/FilmControllerLog.log</file>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
         </encoder>
+        <append>false</append>
+    </appender>
+    <appender name="UserControllerLog" class="ch.qos.logback.core.FileAppender">
+        <file>src/main/resources/logs/UserControllerLog.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
+        </encoder>
+        <append>false</append>
+    </appender>
+    <appender name="ValidationHandler" class="ch.qos.logback.core.FileAppender">
+        <file>src/main/resources/logs/ExceptionLog.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
+        </encoder>
+        <append>false</append>
     </appender>
 
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
-    <logger name ="ru.yandex.practicum.filmorate.controller" level="debug">
-        <appender-ref ref="FILE"/>
+    <logger name ="ru.yandex.practicum.filmorate.controller.FilmController" level="debug">
+        <appender-ref ref="FilmControllerLog"/>
+    </logger>
+    <logger name ="ru.yandex.practicum.filmorate.controller.UserController" level="debug">
+        <appender-ref ref="UserControllerLog"/>
+    </logger>
+    <logger name ="ru.yandex.practicum.filmorate.controller.validation" level="warn">
+        <appender-ref ref="ValidationHandler"/>
     </logger>
 </configuration>

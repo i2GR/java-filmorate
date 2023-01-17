@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import ru.yandex.practicum.filmorate.controller.validation.ValidationException;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/movie")
 public class FilmController {
@@ -19,19 +21,33 @@ public class FilmController {
 
     @PostMapping("/new")
     public Film addNewMovie(@RequestBody Film film) throws ValidationException {
+        log.info("requested movie add");
         film = FilmValidator.validate(film);
+        if (!idMapFilm.containsValue(film)) {
+            idMapFilm.put(film.getId(), film);
+            log.info("movie added");
+            return film;
+        }
+        log.info("movie not added. duplicated");
         return film;
     }
 
     @PutMapping("/update")
-    public Film updateMovie(@RequestBody Film film){
-        //TODO
+    public Film updateMovie(@RequestBody Film film) throws ValidationException {
+        log.info("requested movie update ");
+        film = FilmValidator.validate(film);
+        if (idMapFilm.containsValue(film)) {
+            idMapFilm.put(film.getId(), film);
+            log.info("movie updated");
+            return film;
+        }
+        log.info("movie not updated. no movie found");
         return film;
     }
 
     @GetMapping("/list")
     public List<Film> getAllMovies(){
-        //TODO testlog
+        log.info("requested films list");
         return new ArrayList<>(idMapFilm.values());
     }
 }

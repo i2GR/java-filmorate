@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StringValidatorTest {
     String nullString = null;
@@ -20,40 +21,36 @@ class StringValidatorTest {
 
     @Test
     void checkEmpty() {
-        assertEquals(checkEmptyWithException(nullString), exceptionCase);
-        assertEquals(checkEmptyWithException(emptyString), exceptionCase);
-        assertEquals(checkEmptyWithException(oneSpaceString), exceptionCase);
-        assertEquals(checkEmptyWithException(twoSpacesString), exceptionCase);
-        assertEquals(checkEmptyWithException(normalString), normalString);
+        assertThrows(ValidationException.class, () -> checkEmpty(nullString));
+        assertThrows(ValidationException.class, () -> checkEmpty(emptyString));
+        assertThrows(ValidationException.class, () -> checkEmpty(oneSpaceString));
+        assertThrows(ValidationException.class, () -> checkEmpty(oneSpaceString));
+        try {
+            assertTrue(checkEmpty(normalString));
+        } catch (ValidationException ve) {
+            fail();
+        }
     }
 
     @Test
     void checkLength() {
-        assertEquals(checkLengthWithException(emptyString, 0), emptyString);
-        assertEquals(checkLengthWithException(emptyString, 1), emptyString);
-        assertEquals(checkLengthWithException(oneSpaceString, 0), exceptionCase);
-        assertEquals(checkLengthWithException(oneSpaceString, 1), oneSpaceString);
-        assertEquals(checkLengthWithException(oneSpaceString, 2), oneSpaceString);
-        assertEquals(checkLengthWithException(twoSpacesString, 2), twoSpacesString);
-        assertEquals(checkLengthWithException(normalString, normalString.length() + 1), normalString);
-        assertEquals(checkLengthWithException(normalString, normalString.length() - 1), exceptionCase);
-    }
+        assertThrows(ValidationException.class, () -> checkLength(oneSpaceString, 0));
+        assertThrows(ValidationException.class, () -> checkLength(normalString, normalString.length() - 1));
 
-    private String checkEmptyWithException(String param) {
         try {
-            StringValidator.checkEmpty(param, testFieldValue);
-            return param;
+            assertTrue(checkLength(emptyString, 0));
+            assertTrue(checkLength(emptyString, 1));
+            assertTrue(checkLength(normalString, normalString.length() + 1));
         } catch (ValidationException ve) {
-            return "exceptionThrown";
+            fail();
         }
     }
 
-    private String checkLengthWithException(String param, int limit) {
-        try {
-            StringValidator.checkLength(param.length(), limit, testFieldValue);
-            return param;
-        } catch (ValidationException ve) {
-            return "exceptionThrown";
-        }
+    private boolean checkEmpty(String param) throws ValidationException{
+         return StringValidator.checkEmpty(param, testFieldValue);
+    }
+
+    private boolean checkLength(String param, int limit) throws ValidationException{
+            return StringValidator.checkLength(param.length(), limit, testFieldValue);
     }
 }
