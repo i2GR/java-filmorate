@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmValidatorTest {
@@ -44,7 +46,7 @@ class FilmValidatorTest {
     @Test
     void validateReleaseDate() {
 
-        film.setReleaseDate(FixedValues.CINEMA_BIRTHDAY.minusDays(1));
+        film.setReleaseDate(FixedValues.CINEMA_BIRTHDAY.minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         assertThrows(ValidationException.class, () -> FilmValidator.validate(film));
     }

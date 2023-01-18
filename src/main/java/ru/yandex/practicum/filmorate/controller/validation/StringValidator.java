@@ -1,5 +1,8 @@
 package ru.yandex.practicum.filmorate.controller.validation;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class StringValidator {
 
    public static boolean checkEmpty(String param, String field) throws ValidationException {

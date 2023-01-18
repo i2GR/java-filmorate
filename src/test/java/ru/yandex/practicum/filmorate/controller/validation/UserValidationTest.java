@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -64,7 +65,7 @@ public class UserValidationTest {
     @Test
     void validateBirthdayInFuture() {
         LocalDate today = LocalDate.now();
-        user.setBirthday(today.plusDays(1));
+        user.setBirthday(today.plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         assertThrows(ValidationException.class, () -> UserValidator.validate(user));
     }

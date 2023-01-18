@@ -1,19 +1,27 @@
 package ru.yandex.practicum.filmorate.controller.validation;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-public class UserValidator {
+@Slf4j
+public class UserValidator  {
 
     public static User validate(User user) throws ValidationException {
-        if (user == null) throw new ValidationException("null object received");
-        StringValidator.checkEmpty(user.getEmail(), "User.email");
-        StringValidator.checkEmpty(user.getLogin(), "User.login");
-        checkEmail(user.getEmail());
-        checkLogin(user.getLogin());
+        try {
+            nullCheck(user);
+            StringValidator.checkEmpty(user.getEmail(), "User.email");
+            checkEmail(user.getEmail());
+            StringValidator.checkEmpty(user.getLogin(), "User.login");
+            checkLogin(user.getLogin());
+            checkBirthday(LocalDate.parse(user.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        } catch (ValidationException ve) {
+            log.warn(ve.getMessage());
+            throw ve;
+        }
         user.setName(checkName(user));
-        checkBirthday(user.getBirthday());
         return user;
     }
 
@@ -24,17 +32,22 @@ public class UserValidator {
         }
     }
     private static void checkLogin(String login) throws ValidationException {
+
         if (login.contains(" ")) {
             throw new ValidationException("user.login contain space character");
         }
     }
 
     private static String checkName(User user) {
-        return (user.getName().isBlank() || user.getName() == null) ? user.getLogin() : user.getName();
+        return (user.getName() == null || user.getName().isBlank()) ? user.getLogin() : user.getName();
     }
 
     private static void checkBirthday(LocalDate date) throws ValidationException {
         if (date.isAfter(LocalDate.now())) throw new ValidationException("incorrect birthday with future value");
+    }
+
+    private static void nullCheck(User user) throws ValidationException{
+        if (user == null) throw new ValidationException("null User received");
     }
 
 }

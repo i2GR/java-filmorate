@@ -15,10 +15,8 @@ class FilmControllerTest {
     @Test
     void addNewMovie() throws ValidationException {
         assertEquals(film,fc.addNewMovie(film));
-
-        fc.addNewMovie(film);
-
         assertEquals(1, fc.getAllMovies().size());
+        assertThrows(ValidationException.class, () -> fc.addNewMovie(film));
         assertThrows(ValidationException.class, () -> fc.addNewMovie(null));
     }
 

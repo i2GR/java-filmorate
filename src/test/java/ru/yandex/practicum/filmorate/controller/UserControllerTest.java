@@ -15,10 +15,8 @@ class UserControllerTest {
     @Test
     void addNewUser() throws ValidationException {
         assertEquals(user,uc.addNewUser(user));
-
-        uc.addNewUser(user);
-
         assertEquals(1, uc.getAllUsers().size());
+        assertThrows(ValidationException.class, () -> uc.addNewUser(user));
         assertThrows(ValidationException.class, () -> uc.addNewUser(null));
     }
 
