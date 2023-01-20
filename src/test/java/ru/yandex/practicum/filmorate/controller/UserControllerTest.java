@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controller.validation.TestInstance;
+import ru.yandex.practicum.filmorate.ItemForTest;
 import ru.yandex.practicum.filmorate.controller.validation.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -9,8 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
 
-    private final User user = TestInstance.setDefaultTestUser(1);
+    private final User user = ItemForTest.setDefaultTestUser(1);
     UserController uc = new UserController();
+
+    {
+        uc.setCustomValidation(true);
+    }
 
     @Test
     void addNewUser() throws ValidationException {
@@ -32,7 +36,7 @@ class UserControllerTest {
     @Test
     void getAllUser() throws ValidationException {
         uc.addNewUser(user);
-        User user2 = TestInstance.setDefaultTestUser(2);
+        User user2 = ItemForTest.setDefaultTestUser(2);
         user2.setLogin("newLogin");
         uc.addNewUser(user2);
 

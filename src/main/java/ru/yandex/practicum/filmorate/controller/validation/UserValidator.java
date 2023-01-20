@@ -1,26 +1,29 @@
 package ru.yandex.practicum.filmorate.controller.validation;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Slf4j
+/**
+ * вадидация пользователя согласно первой части ТЗ (без учета доп.задания)
+ * @Note осталось применение только в тестах
+ */
 public class UserValidator  {
 
+    /**
+     *
+     * @param user экз. пользователя
+     * @return экземпляр пользователя
+     * @throws ValidationException пользовательствое иисключение согласно ТЗ
+     */
     public static User validate(User user) throws ValidationException {
-        try {
-            nullCheck(user);
-            StringValidator.checkEmpty(user.getEmail(), "User.email");
-            checkEmail(user.getEmail());
-            StringValidator.checkEmpty(user.getLogin(), "User.login");
-            checkLogin(user.getLogin());
-            checkBirthday(LocalDate.parse(user.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        } catch (ValidationException ve) {
-            log.warn(ve.getMessage());
-            throw ve;
-        }
+        if (user == null ) throw new ValidationException("null User received");
+        StringValidator.checkEmpty(user.getEmail(), "User.email");
+        checkEmail(user.getEmail());
+        StringValidator.checkEmpty(user.getLogin(), "User.login");
+        checkLogin(user.getLogin());
+        checkBirthday(LocalDate.parse(user.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         user.setName(checkName(user));
         return user;
     }
@@ -43,11 +46,7 @@ public class UserValidator  {
     }
 
     private static void checkBirthday(LocalDate date) throws ValidationException {
-        if (date.isAfter(LocalDate.now())) throw new ValidationException("incorrect birthday with future value");
-    }
-
-    private static void nullCheck(User user) throws ValidationException{
-        if (user == null) throw new ValidationException("null User received");
+        if (date.isAfter(LocalDate.now())) throw new ValidationException("user.birthday has incorrect value of future value");
     }
 
 }

@@ -1,13 +1,19 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 
 import ru.yandex.practicum.filmorate.controller.validation.UserValidator;
 import ru.yandex.practicum.filmorate.controller.validation.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.*;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -15,12 +21,18 @@ import java.util.*;
 public class UserController {
 
     private int id = 0;
+
+    @Setter
+    private boolean customValidation = false;
+
     private final Map<Integer, User> idMapUser = new HashMap<>();
 
     @PostMapping("")
-    public User addNewUser(@RequestBody User user) throws ValidationException {
+    public User addNewUser(@Valid @RequestBody User user) throws ValidationException {
         log.info("requested user add");
-        user = UserValidator.validate(user);
+        // здесь валидатор остался только для написанных тестов
+        if (customValidation) user = UserValidator.validate(user);
+        user.setName(user.getName() == null || user.getName().isBlank() ? user.getLogin() : user.getName());
         if (user.getId() == 0) {
             user.setId(++id);
         }
@@ -29,22 +41,22 @@ public class UserController {
             log.info("user added");
             return user;
         }
-        log.info("user not added. duplicated");
-        throw new ValidationException("user not added. duplicated");
+        throw new ValidationException("user to add already exists");
     }
 
     @PutMapping("")
-    public User updateUser(@RequestBody User user) throws ValidationException {
+    public User updateUser(@Valid @RequestBody User user) throws ValidationException {
         log.info("requested user update ");
-        user = UserValidator.validate(user);
+        // здесь валидатор остался только для написанных тестов
+        if (customValidation) user = UserValidator.validate(user);
+        user.setName(user.getName() == null || user.getName().isBlank() ? user.getLogin() : user.getName());
         if (idMapUser.containsKey(user.getId())) {
             idMapUser.remove(user.getId());
             idMapUser.put(user.getId(), user);
             log.info("user updated");
             return user;
         }
-        log.info("user not updated. no movie found");
-        throw new ValidationException("user not updated. no user found");
+        throw new ValidationException("user is not registered");
     }
 
     @GetMapping("")

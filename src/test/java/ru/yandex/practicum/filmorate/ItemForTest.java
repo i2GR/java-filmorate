@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller.validation;
+package ru.yandex.practicum.filmorate;
 
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class TestInstance {
+public class ItemForTest {
 
     public static User setDefaultTestUser(int id) {
         User user = new User();

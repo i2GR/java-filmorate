@@ -38,7 +38,7 @@
     <logger name ="ru.yandex.practicum.filmorate.controller.UserController" level="debug">
         <appender-ref ref="UserControllerLog"/>
     </logger>
-    <logger name ="ru.yandex.practicum.filmorate.controller.validation" level="warn">
+    <logger name ="ru.yandex.practicum.filmorate.controller.validation.ValidationExceptionHandler" level="warn">
         <appender-ref ref="ValidationHandler"/>
     </logger>
 </configuration>

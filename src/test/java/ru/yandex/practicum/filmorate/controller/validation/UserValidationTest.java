@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller.validation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.ItemForTest;
 import ru.yandex.practicum.filmorate.model.User;
 
 
@@ -16,7 +17,7 @@ public class UserValidationTest {
 
     @BeforeEach
     void setupFilm() {
-        user = TestInstance.setDefaultTestUser(1);
+        user = ItemForTest.setDefaultTestUser(1);
         try {
             assertEquals(user, UserValidator.validate(user));
         } catch (ValidationException ve){

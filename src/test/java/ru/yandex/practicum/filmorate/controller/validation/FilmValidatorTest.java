@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller.validation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.ItemForTest;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.format.DateTimeFormatter;
@@ -13,7 +14,7 @@ class FilmValidatorTest {
 
     @BeforeEach
     void setupFilm() {
-        film = TestInstance.setDefaultTestFilm(1);
+        film = ItemForTest.setDefaultTestFilm(1);
         try {
             assertEquals(film, FilmValidator.validate(film));
         } catch (ValidationException ve){
