@@ -1,48 +1,46 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.ItemForTest;
-import ru.yandex.practicum.filmorate.controller.validation.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.utils.TestUserBuilder;
 
-import static org.junit.jupiter.api.Assertions.*;
+class UserControllerTest extends ControllerTest<User>{
 
-class UserControllerTest {
+    private User user;
 
-    private final User user = ItemForTest.setDefaultTestUser(1);
-    UserController uc = new UserController();
+    public UserControllerTest() {
+        super(new UserController());
+    }
 
-    {
-        uc.setCustomValidation(true);
+    @BeforeEach
+    void setup() {
+        TestUserBuilder builder = new TestUserBuilder();
+        user = builder.defaultUser().build();
     }
 
     @Test
-    void addNewUser() throws ValidationException {
-        assertEquals(user,uc.addNewUser(user));
-        assertEquals(1, uc.getAllUsers().size());
-        assertThrows(ValidationException.class, () -> uc.addNewUser(user));
-        assertThrows(ValidationException.class, () -> uc.addNewUser(null));
+    void addNewMovie() {
+        super.addNew(user);
     }
 
     @Test
-    void updateUser() throws ValidationException {
-        uc.addNewUser(user);
-        user.setName("newName");
+    void updateMovie() {
+        User updatedUser = new TestUserBuilder()
+                                .defaultUser()
+                                .setName("new name")
+                                .build();
 
-        assertEquals("newName", uc.updateUser(user).getName());
-        assertThrows(ValidationException.class, () -> uc.updateUser(null));
+        super.update(user, updatedUser);
     }
 
     @Test
-    void getAllUser() throws ValidationException {
-        uc.addNewUser(user);
-        User user2 = ItemForTest.setDefaultTestUser(2);
-        user2.setLogin("newLogin");
-        uc.addNewUser(user2);
+    void updateNullMovie() {
+        super.updateNull();
+    }
 
-        User[] expected = {user, user2};
-        User[] actual = uc.getAllUsers().toArray(new User[]{});
-
-        assertArrayEquals(expected, actual);
+    @Test
+    void getAllMovies() {
+        super.getAll(user);
     }
 }

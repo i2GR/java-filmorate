@@ -7,15 +7,8 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
         </encoder>
     </appender>
-    <appender name="FilmControllerLog" class="ch.qos.logback.core.FileAppender">
-        <file>src/main/resources/logs/FilmControllerLog.log</file>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
-        </encoder>
-        <append>false</append>
-    </appender>
-    <appender name="UserControllerLog" class="ch.qos.logback.core.FileAppender">
-        <file>src/main/resources/logs/UserControllerLog.log</file>
+    <appender name="ControllerLog" class="ch.qos.logback.core.FileAppender">
+        <file>src/main/resources/logs/ControllerLog.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
         </encoder>
@@ -32,11 +25,8 @@
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
-    <logger name ="ru.yandex.practicum.filmorate.controller.FilmController" level="debug">
-        <appender-ref ref="FilmControllerLog"/>
-    </logger>
-    <logger name ="ru.yandex.practicum.filmorate.controller.UserController" level="debug">
-        <appender-ref ref="UserControllerLog"/>
+    <logger name ="ru.yandex.practicum.filmorate.controller" level="debug">
+        <appender-ref ref="ControllerLog"/>
     </logger>
     <logger name ="ru.yandex.practicum.filmorate.controller.validation.ValidationExceptionHandler" level="warn">
         <appender-ref ref="ValidationHandler"/>

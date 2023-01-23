@@ -1,67 +1,56 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-
-import ru.yandex.practicum.filmorate.controller.validation.UserValidator;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.controller.validation.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController extends BasicController<User> {
 
-    private int id = 0;
-
-    @Setter
-    private boolean customValidation = false;
-
-    private final Map<Integer, User> idMapUser = new HashMap<>();
-
-    @PostMapping("")
-    public User addNewUser(@Valid @RequestBody User user) throws ValidationException {
-        log.info("requested user add");
-        // здесь валидатор остался только для написанных тестов
-        if (customValidation) user = UserValidator.validate(user);
-        user.setName(user.getName() == null || user.getName().isBlank() ? user.getLogin() : user.getName());
-        if (user.getId() == 0) {
-            user.setId(++id);
-        }
-        if (!idMapUser.containsKey(user.getId())) {
-            idMapUser.put(user.getId(), user);
-            log.info("user added");
-            return user;
-        }
-        throw new ValidationException("user to add already exists");
+    public UserController() {
+        super("User");
     }
 
-    @PutMapping("")
-    public User updateUser(@Valid @RequestBody User user) throws ValidationException {
-        log.info("requested user update ");
-        // здесь валидатор остался только для написанных тестов
-        if (customValidation) user = UserValidator.validate(user);
-        user.setName(user.getName() == null || user.getName().isBlank() ? user.getLogin() : user.getName());
-        if (idMapUser.containsKey(user.getId())) {
-            idMapUser.remove(user.getId());
-            idMapUser.put(user.getId(), user);
-            log.info("user updated");
-            return user;
-        }
-        throw new ValidationException("user is not registered");
+    @PostMapping
+    public User addNewUser(@Valid @RequestBody User user) {
+        return super.addNew(renameOnLogin(user));
     }
 
-    @GetMapping("")
+    @PutMapping
+    public User updateUser(@Valid @RequestBody User user) {
+        return super.update(renameOnLogin(user));
+    }
+
+    @GetMapping
     public List<User> getAllUsers() {
-        log.info("requested users list");
-        return new ArrayList<>(idMapUser.values());
+        return super.getAll();
+    }
+
+    /**
+     * метод для подстановки логина пользователя в качестве имени при незаполненном поле Name
+     * @param user экз. User из запроса
+     * @return экз. User с заполенным полем Name
+     * @throws ValidationException исключение
+     */
+    private User renameOnLogin(User user) throws ValidationException {
+        try {
+            String userName = user.getName();
+            if (userName == null || userName.isBlank()) {
+                user.setName(user.getLogin());
+                BasicController.getLog().info("User.name received is empty. User renamed based on Login");
+            }
+        } catch (NullPointerException npe) {
+            throw new ValidationException("Non correct User object received");
+        }
+        return user;
     }
 }

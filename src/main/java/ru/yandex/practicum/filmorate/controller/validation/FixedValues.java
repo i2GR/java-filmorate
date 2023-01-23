@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.controller.validation;
 import java.time.LocalDate;
 
 /**
- * класс, содержащий коснтанты
+ * класс, содержащий конcтанты
  */
 public abstract class FixedValues {
     public static final int MOVIE_DESCR_LENGTH = 200;

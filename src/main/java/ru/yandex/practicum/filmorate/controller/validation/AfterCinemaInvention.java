@@ -15,11 +15,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Constraint(validatedBy = FilmReleaseDateValidator.class)
 public @interface AfterCinemaInvention {
-
     String message() default "Film.releaseDate before cinema era";
-
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 }
 
