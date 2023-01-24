@@ -9,7 +9,7 @@ class FilmControllerTest extends ControllerTest<Film>{
 
     private Film film;
 
-    public FilmControllerTest() {
+    private FilmControllerTest() {
         super(new FilmController());
     }
 

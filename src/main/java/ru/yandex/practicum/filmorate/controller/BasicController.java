@@ -26,28 +26,28 @@ public abstract class BasicController<T extends Entity> {
     }
 
     protected T addNew( T item) {
-        log.info(String.format("requested %s to add", dtoName));
+        log.info("requested {} to add", dtoName);
         if (item.getId() == 0) {
             item.setId(++id);
         }
         if (idMapDTO.putIfAbsent(item.getId(), item) == null) { // ключа нет в мапе -> добавление KV-пары
-            log.info(dtoName + " added");
+            log.info("{} added", dtoName);
             return item;
         }
-        throw new ValidationException(dtoName + " to add already exists");
+        throw new ValidationException(String.format("%s to add already exists", dtoName));
     }
 
     protected T update(T item) {
-        log.info(String.format("requested %s update", dtoName));
+        log.info("requested {} update", dtoName);
         if (idMapDTO.replace(item.getId(), item) == null) { // ключа нет в мапе -> нельзя обновить
-            throw new ValidationException(dtoName + " is not registered");
+            throw new ValidationException(String.format("%s is not registered", dtoName));
         }
         log.info(dtoName + " updated");
         return item;
     }
 
     protected List<T> getAll() {
-        log.info(String.format("requested %ss list", dtoName));
+        log.info("requested {}s list", dtoName);
         return new ArrayList<>(idMapDTO.values());
     }
 

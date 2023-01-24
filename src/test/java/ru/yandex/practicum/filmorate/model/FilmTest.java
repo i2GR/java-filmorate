@@ -85,8 +85,8 @@ class FilmTest {
     }
 
     @Test
-    void nameDescriptionSize200() {
-        film.setDescription("-".repeat(200));
+    void descriptionSizeEqualsMaxDescriptionLength() {
+        film.setDescription("-".repeat(FixedValues.MAX_MOVIE_DESCR_LENGTH));
 
         Set<ConstraintViolation<Film>> constraintViolations = validator.validate(film);
 
@@ -94,8 +94,8 @@ class FilmTest {
     }
 
     @Test
-    void nameDescriptionSize201() {
-        film.setDescription("-".repeat(201));
+    void descriptionSizeExceedsMaxDescriptionLength() {
+        film.setDescription("-".repeat(FixedValues.MAX_MOVIE_DESCR_LENGTH + 1));
 
         Set<ConstraintViolation<Film>> constraintViolations = validator.validate(film);
 

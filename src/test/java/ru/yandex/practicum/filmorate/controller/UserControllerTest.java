@@ -9,7 +9,7 @@ class UserControllerTest extends ControllerTest<User>{
 
     private User user;
 
-    public UserControllerTest() {
+    private UserControllerTest() {
         super(new UserController());
     }
 

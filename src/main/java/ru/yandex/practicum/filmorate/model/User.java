@@ -22,6 +22,6 @@ public class User extends Entity {
     private String name;
 
     @PastOrPresent(message = "User.birthdate is in Future")
-    LocalDate birthday;
+    private LocalDate birthday;
 
 }

@@ -15,9 +15,9 @@ public abstract class ControllerTest<T extends Entity> {
         this.controller = controller;
     }
 
-    @Test()
+    @Test
     void addNewNull() {
-        assertThrows(Exception.class, () -> controller.addNew(null));
+        assertThrows(RuntimeException.class, () -> controller.addNew(null));
     }
 
     @Test
@@ -26,7 +26,7 @@ public abstract class ControllerTest<T extends Entity> {
     }
 
     void getAll(T original) {
-        assertEquals(0, controller.getAll().size());
+        assertTrue(controller.getAll().isEmpty());
 
         controller.addNew(original);
 
