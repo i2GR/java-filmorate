@@ -25,10 +25,10 @@
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
-    <logger name ="ru.yandex.practicum.filmorate.controller" level="debug">
+    <logger name ="ru.yandex.practicum.filmorate.storage" level="debug">
         <appender-ref ref="ControllerLog"/>
     </logger>
-    <logger name ="ru.yandex.practicum.filmorate.controller.validation.ValidationExceptionHandler" level="warn">
+    <logger name ="ru.yandex.practicum.filmorate.exception.ValidationExceptionHandler" level="warn">
         <appender-ref ref="ValidationHandler"/>
     </logger>
 </configuration>

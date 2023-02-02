@@ -1,7 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.Entity;
+
+import ru.yandex.practicum.filmorate.model.entity.Entity;
+import ru.yandex.practicum.filmorate.service.EntityServable;
+import ru.yandex.practicum.filmorate.storage.entity.EntityStorable;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,11 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class ControllerTest<T extends Entity> {
 
-    private final BasicController<T>  controller;
-
-    protected ControllerTest(BasicController<T> controller) {
-        this.controller = controller;
-    }
+    protected EntityStorable<T> storage;
+    protected EntityServable<T> service;
+    protected BasicController<T> controller;
 
     @Test
     void addNewNull() {

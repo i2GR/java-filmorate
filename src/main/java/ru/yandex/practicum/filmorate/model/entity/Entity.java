@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,5 +6,6 @@ import lombok.Setter;
 public abstract class Entity implements Identable {
     @Getter
     @Setter
-    private int id;
+    private Long id;
+
 }

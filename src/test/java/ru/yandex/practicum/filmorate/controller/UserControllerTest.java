@@ -2,7 +2,12 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.entity.User;
+import ru.yandex.practicum.filmorate.service.user.UserService;
+import ru.yandex.practicum.filmorate.storage.activity.friends.FriendsStorable;
+import ru.yandex.practicum.filmorate.storage.activity.friends.InMemoryFriendPairsStorage;
+import ru.yandex.practicum.filmorate.storage.entity.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
 import ru.yandex.practicum.filmorate.utils.TestUserBuilder;
 
 class UserControllerTest extends ControllerTest<User>{
@@ -10,7 +15,10 @@ class UserControllerTest extends ControllerTest<User>{
     private User user;
 
     private UserControllerTest() {
-        super(new UserController());
+        super();
+        storage = new InMemoryUserStorage();
+        service = new UserService((FriendsStorable) new InMemoryFriendPairsStorage(), (UserStorage) storage);
+        controller = new UserController(service);
     }
 
     @BeforeEach
@@ -20,27 +28,27 @@ class UserControllerTest extends ControllerTest<User>{
     }
 
     @Test
-    void addNewMovie() {
+    void addNewUser() {
         super.addNew(user);
     }
 
     @Test
-    void updateMovie() {
+    void updateUser() {
         User updatedUser = new TestUserBuilder()
-                                .defaultUser()
-                                .setName("new name")
-                                .build();
+                .defaultUser()
+                .setName("new name")
+                .build();
 
         super.update(user, updatedUser);
     }
 
     @Test
-    void updateNullMovie() {
+    void updateNullUser() {
         super.updateNull();
     }
 
     @Test
-    void getAllMovies() {
+    void getAllUsers() {
         super.getAll(user);
     }
 }
