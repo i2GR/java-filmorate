@@ -19,6 +19,11 @@ public abstract class BasicController<T extends Entity> {
         return service.addNewEntity(entity);
     }
 
+    /**
+     * получение объекта Entity по id
+     * @param id идентификатор объекта Entity
+     * @return экземпляр класса
+     */
     public T getById(Long id) {
         return service.getEntity(id);
     }

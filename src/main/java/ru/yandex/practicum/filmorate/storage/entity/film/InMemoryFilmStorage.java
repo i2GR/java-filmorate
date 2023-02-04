@@ -9,6 +9,6 @@ import ru.yandex.practicum.filmorate.utils.EntityType;
 public class InMemoryFilmStorage extends InMemoryEntityStorage<Film> implements FilmStorage {
 
     public InMemoryFilmStorage() {
-        super(EntityType.FILM);
+        super(EntityType.FILM.val());
     }
 }

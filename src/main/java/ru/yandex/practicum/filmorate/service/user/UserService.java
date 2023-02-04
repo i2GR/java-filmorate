@@ -1,63 +1,82 @@
 package ru.yandex.practicum.filmorate.service.user;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.service.UserServiceException;
 import ru.yandex.practicum.filmorate.model.activity.FriendPair;
 import ru.yandex.practicum.filmorate.model.entity.User;
 import ru.yandex.practicum.filmorate.service.BasicEntityService;
+import ru.yandex.practicum.filmorate.service.friend.FriendServable;
 import ru.yandex.practicum.filmorate.storage.activity.friends.FriendsStorable;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
+import ru.yandex.practicum.filmorate.utils.EntityType;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class UserService extends BasicEntityService<User> implements UserServable{
+public class UserService extends BasicEntityService<User> implements UserServable, FriendServable {
 
-    @NonNull
     @Autowired
     private final FriendsStorable friendPairsStorage;
 
     public UserService(@NonNull FriendsStorable FriendsStorable, @NonNull UserStorage userStorage) {
-        super(userStorage);
+        super(EntityType.USER.val(), userStorage);
         this.friendPairsStorage = FriendsStorable;
     }
 
+    /**
+     * перегружен для работы валидации
+     */
     @Override
-    public User addNewEntity(@NonNull User user) {
+    public User addNewEntity(@Valid User user) {
         return super.addNewEntity(renameOnLogin(user));
     }
 
+    /**
+     * перегружен для работы валидации
+     */
     @Override
-    public User updateEntity(@NonNull User user) {
+    public User updateEntity(@Valid User user) {
         return super.updateEntity(renameOnLogin(user));
     }
 
-    public FriendPair joinUpFriends(Long userId1, Long userId2) {
+    @Override
+    public FriendPair joinUpFriends(@Valid Long userId1, @Valid Long userId2) {
         return friendPairsStorage.create(new FriendPair(userId1, userId2));
     }
 
-    public boolean areFriends(Long userId1, Long userId2) {
+    @Override
+    public boolean areFriends(@Valid Long userId1, @Valid Long userId2) {
         return friendPairsStorage.read(new FriendPair(userId1, userId2));
     }
 
-    public FriendPair breakFriends(Long userId1, Long userId2) {
+    @Override
+    public FriendPair breakFriends(@Valid Long userId1, @Valid Long userId2) {
         return friendPairsStorage.delete(new FriendPair(userId1, userId2));
     }
 
-    public List<User> getMutualFriends(Long userId1, Long userId2) {
-        List<User> commonFriends = new ArrayList<>();
+    @Override
+    public List<User> getMutualFriends(@Valid Long userId1, @Valid Long userId2) {
         Set<Long> userId1Friends = friendPairsStorage.getActivitiesById(userId1);
         Set<Long> userId2Friends = friendPairsStorage.getActivitiesById(userId2);
         return userId1Friends.stream()
-                .filter(id1 -> userId2Friends.contains(id1))
-                .map(id1 -> getEntity(id1))
+                .filter(userId2Friends::contains)
+                .map(this::getEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<User> getAllFriends(@Valid Long id) {
+        return friendPairsStorage.getActivitiesById(id)
+                .stream()
+                .map(storage::read)
                 .collect(Collectors.toList());
     }
 
@@ -65,17 +84,17 @@ public class UserService extends BasicEntityService<User> implements UserServabl
      * метод для подстановки логина пользователя в качестве имени при незаполненном поле Name
      * @param user экз. User из запроса
      * @return экз. User с заполенным полем Name
-     * @throws ValidationException исключение
+     * @throws UserServiceException в случае любой ошибки в экземпляре User
      */
-    private User renameOnLogin(User user) throws ValidationException {
+    private User renameOnLogin(User user) throws UserServiceException {
         try {
             String userName = user.getName();
             if (userName == null || userName.isBlank()) {
                 user.setName(user.getLogin());
                 log.info("User.name received is empty. User renamed based on Login");
             }
-        } catch (NullPointerException npe) {
-            throw new ValidationException("Non correct User object received");
+        } catch (RuntimeException t) {
+            throw new UserServiceException("Non correct User object received:incorrect User login", user);
         }
         return user;
     }

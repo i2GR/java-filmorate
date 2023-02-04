@@ -17,7 +17,7 @@ class UserControllerTest extends ControllerTest<User>{
     private UserControllerTest() {
         super();
         storage = new InMemoryUserStorage();
-        service = new UserService((FriendsStorable) new InMemoryFriendPairsStorage(), (UserStorage) storage);
+        service = new UserService(new InMemoryFriendPairsStorage(), (UserStorage) storage);
         controller = new UserController(service);
     }
 
@@ -43,7 +43,8 @@ class UserControllerTest extends ControllerTest<User>{
     }
 
     @Test
-    void updateNullUser() {
+    @Override
+    void updateNull() {
         super.updateNull();
     }
 

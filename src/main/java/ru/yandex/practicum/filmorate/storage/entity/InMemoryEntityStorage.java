@@ -1,11 +1,13 @@
 package ru.yandex.practicum.filmorate.storage.entity;
 
-import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.storage.StorageDuplicateException;
+import ru.yandex.practicum.filmorate.exception.storage.StorageNotFoundException;
+import ru.yandex.practicum.filmorate.exception.validation.ValidationException;
 import ru.yandex.practicum.filmorate.model.entity.Entity;
-import ru.yandex.practicum.filmorate.utils.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,50 +15,34 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
 public abstract class InMemoryEntityStorage<T extends Entity>{
-    private long id = 0;
 
-    @Getter
+    @NonNull
     private String entityType;
 
-    private Map<Long, T> inMemoryData;
-
-    public InMemoryEntityStorage(EntityType type) {
-        this.entityType = type.val();
-        inMemoryData = new HashMap<>();
-    }
+    private final Map<Long, T> inMemoryData = new HashMap<>();
 
     protected static Logger log() {
         return log;
     }
 
-    protected long checkId(T entity) {
-        Long idOfEntity = entity.getId();
-        if (idOfEntity == null) {
-            entity.setId(++id);
-            log.debug("assigned new ID {} to {}", id, entityType);
-            return id;
-        }
-        log.debug("ID {} received by Entity {} used", id, entityType);
-        return idOfEntity;
-    }
-
     //@Override
     public T create(T entity) {
         log.debug("storing {}", entityType);
-        long id = checkId(entity);
+        long id = entity.getId();
         if (inMemoryData.putIfAbsent(id, entity) == null) { // ключа нет в мапе -> добавление KV-пары
             log.debug("{} stored in memory under id {}", entityType, id);
             return entity;
         }
-        throw new ValidationException(String.format("%s to add already exists", entityType));
+        throw new StorageDuplicateException(String.format("%s to add already exists", entityType), entity);
     }
 
     public T read(Long entityId) {
         log.debug("reading {}", entityType);
         T entity = inMemoryData.get(entityId);
         if (entity == null) {
-            throw new ValidationException(String.format("%s to add already exists", entityType));
+            throw new StorageNotFoundException(String.format("%s to add already exists", entityType));
         }
         log.debug("{} read in memory with id {}", entityType, entityId);
         return entity;
@@ -66,7 +52,8 @@ public abstract class InMemoryEntityStorage<T extends Entity>{
     public T update(T entity) {
         log.debug("modifying {}", entityType);
         if (inMemoryData.replace(entity.getId(), entity) == null) { // ключа нет в мапе -> нельзя обновить
-            throw new ValidationException(String.format("%s is not present in memory storage", entityType));
+            // TODO
+            throw new StorageNotFoundException(String.format("%s is not present in memory storage", entityType));
         }
         log.debug(entityType + " updated");
         return entity;
@@ -75,9 +62,9 @@ public abstract class InMemoryEntityStorage<T extends Entity>{
     //@Override
     public T delete(Long entityId) {
         log.debug("deleting {} with id {} ", entityType, entityId);
-        T entity = inMemoryData.remove(id);
+        T entity = inMemoryData.remove(entityId);
         if (entity == null) {
-            throw new ValidationException(String.format("%s is not present in memory storage", entityType));
+            throw new StorageNotFoundException(String.format("%s is not present in memory storage", entityType));
         }
         log.debug("deleted {} with ID {}", entityType, entity.getId());
         return entity;

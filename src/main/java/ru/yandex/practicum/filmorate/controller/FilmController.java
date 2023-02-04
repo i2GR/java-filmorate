@@ -1,12 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.entity.Film;
 import ru.yandex.practicum.filmorate.service.EntityServable;
 
@@ -31,13 +25,10 @@ public class FilmController extends BasicController<Film> {
 
     /**
      * получение фильма по id
-     * @implNote ендпойт не указан в ТЗ10
-     * @param id идентификатор фильма (запрос)
-     * @return экземпляр класса Film
      */
     @Override
     @GetMapping("/{id}")
-    public Film getById(@PathVariable Long id) {
+    public Film getById(@Valid @PathVariable Long id) {
         return super.getById(id);
     }
 

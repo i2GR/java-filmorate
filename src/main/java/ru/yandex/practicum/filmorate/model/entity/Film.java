@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.yandex.practicum.filmorate.controller.validation.AfterCinemaInvention;
+import ru.yandex.practicum.filmorate.validation.model.AfterCinemaInvention;
 import ru.yandex.practicum.filmorate.utils.Constants;
 
 import javax.validation.constraints.NotBlank;

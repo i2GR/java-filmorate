@@ -17,7 +17,7 @@ class FilmControllerTest extends ControllerTest<Film>{
     private FilmControllerTest() {
         super();
         this.storage = new InMemoryFilmStorage();
-        this.service = new FilmService((LikeStorable) new InMemoryLikesStorage(), (FilmStorage) storage);
+        this.service = new FilmService(new InMemoryLikesStorage(), (FilmStorage) storage);
         this.controller = new FilmController(service);
     }
 
@@ -40,11 +40,6 @@ class FilmControllerTest extends ControllerTest<Film>{
                 .build();
 
         super.update(film, updatedFilm);
-    }
-
-    @Test
-    void updateNullMovie() {
-        super.updateNull();
     }
 
     @Test

@@ -28,7 +28,7 @@
     <logger name ="ru.yandex.practicum.filmorate.storage" level="debug">
         <appender-ref ref="ControllerLog"/>
     </logger>
-    <logger name ="ru.yandex.practicum.filmorate.exception.ValidationExceptionHandler" level="warn">
+    <logger name ="ru.yandex.practicum.filmorate.exception.validation.ValidationExceptionHandler" level="warn">
         <appender-ref ref="ValidationHandler"/>
     </logger>
 </configuration>

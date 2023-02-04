@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import ru.yandex.practicum.filmorate.model.entity.Film;
 import ru.yandex.practicum.filmorate.model.entity.User;
 import ru.yandex.practicum.filmorate.service.EntityServable;
 
@@ -30,15 +32,18 @@ public class UserController extends BasicController<User> {
         return super.addNew(user);
     }
 
+    /**
+     * получение пользователя по id
+     */
     @Override
     @GetMapping("/{id}")
-    public User getById(@PathVariable Long id) {
+    public User getById(@Valid @PathVariable Long id) {
         return super.getById(id);
     }
 
     @Override
     @PutMapping
-    public User update(@Valid @RequestBody User user) {
+    public User update(@NonNull @Valid @RequestBody User user) {
         return super.update(user);
     }
 

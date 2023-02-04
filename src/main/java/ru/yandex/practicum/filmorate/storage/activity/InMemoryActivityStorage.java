@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.storage.StorageDuplicateException;
+import ru.yandex.practicum.filmorate.exception.storage.StorageNotFoundException;
 import ru.yandex.practicum.filmorate.model.activity.ActivityEvent;
 
 import java.util.*;
@@ -30,7 +31,7 @@ public abstract class InMemoryActivityStorage<T extends ActivityEvent> {
             log.debug("{} recorded in memory", activityType);
             return activity;
         }
-        throw new ValidationException(String.format("%s to add already exists", activityType));
+        throw new StorageDuplicateException(String.format("%s to add is already exists", activityType), activity);
     }
 
     //@Override
@@ -46,7 +47,7 @@ public abstract class InMemoryActivityStorage<T extends ActivityEvent> {
             log.debug("deleted {}", activityType);
             return activity;
         }
-        throw new ValidationException(String.format("%s is not present in memory storage", activityType));
+        throw new StorageNotFoundException(String.format("%s is not present in memory storage", activityType));
     }
 
     //@Override

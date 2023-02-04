@@ -9,6 +9,6 @@ import ru.yandex.practicum.filmorate.utils.EntityType;
 public class InMemoryUserStorage extends InMemoryEntityStorage<User> implements UserStorage {
 
     public InMemoryUserStorage() {
-        super(EntityType.USER);
+        super(EntityType.USER.val());
     }
 }
