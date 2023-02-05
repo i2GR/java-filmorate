@@ -4,6 +4,10 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.activity.Like;
 import ru.yandex.practicum.filmorate.storage.activity.InMemoryActivityStorage;
 
+/**
+ * реализация слоя хранилища CRUD-функционала для лайков
+ * ТЗ-10
+ */
 @Component
 public class InMemoryLikesStorage extends InMemoryActivityStorage<Like> implements LikeStorable {
 

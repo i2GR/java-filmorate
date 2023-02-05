@@ -1,19 +1,27 @@
 package ru.yandex.practicum.filmorate.model.activity;
 
+import lombok.Getter;
+
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
+/**
+ * класс хранения/передачи информации о статусе друзей
+ * хранит  информацию о двух id пользователей являющихся друзьями
+ * ТЗ-10
+ */
 public class FriendPair extends ActivityEvent {
+    @Getter
     @NotNull(message = "user1 id is null")
-    private Long friendIdOne;
+    private final Long friendIdOne;
+    @Getter
     @NotNull(message = "user2 id is null")
-    private Long friendIdTwo;
+    private final Long friendIdTwo;
 
     public FriendPair(Long idOne, Long idTwo) {
         friendIdOne = idOne;
         friendIdTwo = idTwo;
     }
-
 
     /**
      * получение идентификатора "друга" по идентификатору пользователя

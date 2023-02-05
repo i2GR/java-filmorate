@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 /**
  * Аннтоция для проверки даты выпуска фильма
  * имплементация: {@link FilmReleaseDateValidator}
+ * ТЗ-9
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

@@ -1,19 +1,49 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
 import ru.yandex.practicum.filmorate.model.entity.Entity;
 
+import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * интерфейс для сервис-слоя базового CRUD-функционала для объектов с идентификаторами
+ * ТЗ-10
+ */
 public interface EntityServable<T extends Entity> {
 
-    public T addNewEntity(T entity);
+    /**
+     * добавление экземпляра объекта в приложение
+     * @param entity экземпляр объекта
+     * @return добавленный экземпляр объекта
+     */
+    T addNewEntity(@Valid T entity);
 
-    public T getEntity(Long entityId);
+    /**
+     * получение экземпляра объекта из приложения по идентификатору
+     * @param entityId идентификатор
+     * @return экземпляр объекта под данным идентификатором
+     */
+    T getEntity(@NonNull Long entityId);
 
-    public T updateEntity(T entity);
+    /**
+     * обновление экземпляра объекта в приложение
+     * @param entity экземпляр объекта
+     * @return добавленный экземпляр объекта
+     */
+    T updateEntity(@Valid T entity);
 
-    public T deleteEntity(Long entityId);
+    /**
+     * удаление экземпляра объекта из приложения по идентификатору
+     * @param entityId идентификатор
+     * @return экземпляр объекта, который хранился под данным идентификатором
+     */
+    T deleteEntity(@NonNull Long entityId);
 
-    public List<T> getAll();
+    /**
+     * получение списка всех объектов в приложении
+     * @return список экземпляров объектов
+     */
+    // вопрос к следующим ТЗ - не нужно ли получать Map<>?
+    List<T> getAll();
 }

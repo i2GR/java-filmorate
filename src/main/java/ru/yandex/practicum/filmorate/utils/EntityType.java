@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.utils;
 
+/**
+ * перечисление хранимых сущностей
+ * ТЗ-10
+ */
 public enum EntityType {
     FILM(),
     USER();

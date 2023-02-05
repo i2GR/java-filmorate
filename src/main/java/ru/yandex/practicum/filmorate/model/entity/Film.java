@@ -10,6 +10,10 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+/**
+ * DTO-класс информации о фильме
+ * ТЗ-9
+ */
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class Film extends Entity {

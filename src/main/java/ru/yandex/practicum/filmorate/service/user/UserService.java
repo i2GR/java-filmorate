@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.service.UserServiceException;
@@ -19,6 +18,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * реализация CRUD-функционала в сервис слое для пользователей
+ * ТЗ-10
+ */
 @Slf4j
 @Service
 public class UserService extends BasicEntityService<User> implements UserServable, FriendServable {
@@ -32,23 +35,31 @@ public class UserService extends BasicEntityService<User> implements UserServabl
     }
 
     /**
-     * перегружен для работы валидации
+     * перегружен для работы проверки имени пользователя
+     *  в случае отсутствия присвоение имени по логину
      */
     @Override
-    public User addNewEntity(@Valid User user) {
+    public User addNewEntity(User user) {
         return super.addNewEntity(renameOnLogin(user));
     }
 
     /**
-     * перегружен для работы валидации
+     * перегружен для работы проверки имени пользователя
+     *  в случае отсутствия присвоение имени по логину
      */
     @Override
-    public User updateEntity(@Valid User user) {
+    public User updateEntity(User user) {
         return super.updateEntity(renameOnLogin(user));
     }
 
+    /**
+     * перегружен для работы проверки наличия пользователей в хранилище
+     *  в случае отсутитвия присвоение имени по логину
+     */
     @Override
     public FriendPair joinUpFriends(@Valid Long userId1, @Valid Long userId2) {
+        storage.read(userId1);
+        storage.read(userId2);
         return friendPairsStorage.create(new FriendPair(userId1, userId2));
     }
 

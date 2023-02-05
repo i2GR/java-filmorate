@@ -7,13 +7,19 @@ import lombok.RequiredArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
+/**
+ * класс лайка.
+ * хранит информацию какой пользователь поставил лайк и какому фильму
+ * информация о пользователе/фильме посредством идентификаторов
+ * ТЗ-10
+ */
 @RequiredArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Like extends ActivityEvent {
+
     /**
      * идентификатор пользователя, поставившего лайк
      */
-
     @Getter
     @NotNull(message = "userId is null")
     private final Long userId;
@@ -25,21 +31,14 @@ public class Like extends ActivityEvent {
     @NotNull(message = "filmId is null")
     private final Long filmId;
 
-
     /**
-     * получение идентификатора фильма по идентификатору пользователя
-     * или получение идентификатора пользователя по идентификатору фильма
-     * возможно тонкое место, требущее переработки
-     *
-     * @param id идентификатор сущности, для которого проводится "поиск" id парной сущности
+     * получение идентификатора пользователя по идентификатору фильма
+     * @param id идентификатор сущности, для которого проводится "поиск" id парной сущности пользователь-фильм
      * @return Optional со значением идентификатора, если запрошенная сущность содержится в экземпляре класса
      * или Optional c null
      */
-    //TODO
-    // переработать?
     @Override
     public Optional<Long> getPairedId(Long id) {
-        if (userId.longValue() == id.longValue()) return Optional.of(filmId);
         if (filmId.longValue() == id.longValue()) return Optional.of(userId);
         return Optional.empty();
     }

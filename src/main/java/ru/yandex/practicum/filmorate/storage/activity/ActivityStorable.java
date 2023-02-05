@@ -36,16 +36,13 @@ public interface ActivityStorable<T extends ActivityEvent> {
      * @param activity событие
      * @return экземпляр, удаленный и полученный из хранилища
      */
-    //TODO
-    //тест?
     T delete(T activity);
 
     /**
-     * получение списка всех активностей
-     * @return список
+     * получение списка всех активностей по идентификатору
+     * @return Сет активностей ,связанный с запрошенным идентификатором
+     * в зависимости от контекста
      */
-    //TODO
-    //параметры метода или новый метод
     Set<Long> getActivitiesById(Long id);
 
 }

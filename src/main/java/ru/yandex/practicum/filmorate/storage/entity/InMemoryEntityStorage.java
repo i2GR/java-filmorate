@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import ru.yandex.practicum.filmorate.exception.storage.StorageDuplicateException;
 import ru.yandex.practicum.filmorate.exception.storage.StorageNotFoundException;
-import ru.yandex.practicum.filmorate.exception.validation.ValidationException;
 import ru.yandex.practicum.filmorate.model.entity.Entity;
 
 import java.util.ArrayList;
@@ -14,6 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Хранилище в ОЗУ с базовым функционалом для объектов с идентификаторами (пользователи, фильмы)
+ * абстрактный класс для избежания повторяющегося кода
+ * ТЗ-10
+ * @param <T> подкласс Entity, для которого определен метод получения по идентификатору
+ */
 @Slf4j
 @RequiredArgsConstructor
 public abstract class InMemoryEntityStorage<T extends Entity>{
@@ -27,7 +33,6 @@ public abstract class InMemoryEntityStorage<T extends Entity>{
         return log;
     }
 
-    //@Override
     public T create(T entity) {
         log.debug("storing {}", entityType);
         long id = entity.getId();
@@ -42,13 +47,12 @@ public abstract class InMemoryEntityStorage<T extends Entity>{
         log.debug("reading {}", entityType);
         T entity = inMemoryData.get(entityId);
         if (entity == null) {
-            throw new StorageNotFoundException(String.format("%s to add already exists", entityType));
+            throw new StorageNotFoundException(String.format("%s with id %s not exists", entityType, entityId.toString()));
         }
         log.debug("{} read in memory with id {}", entityType, entityId);
         return entity;
     }
 
-    //@Override
     public T update(T entity) {
         log.debug("modifying {}", entityType);
         if (inMemoryData.replace(entity.getId(), entity) == null) { // ключа нет в мапе -> нельзя обновить
@@ -59,7 +63,6 @@ public abstract class InMemoryEntityStorage<T extends Entity>{
         return entity;
     }
 
-    //@Override
     public T delete(Long entityId) {
         log.debug("deleting {} with id {} ", entityType, entityId);
         T entity = inMemoryData.remove(entityId);
@@ -70,7 +73,6 @@ public abstract class InMemoryEntityStorage<T extends Entity>{
         return entity;
     }
 
-    //@Override
     public List<T> getAll() {
         log.debug("requested {}s list", entityType);
         return new ArrayList<>(inMemoryData.values());

@@ -5,9 +5,9 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="userStorage" class="ru.yandex.practicum.filmorate.storage.entity.user.InMemoryUserStorage"></bean>
+    <!--bean id="userStorage" class="ru.yandex.practicum.filmorate.storage.entity.user.InMemoryUserStorage"></bean>
     <bean id="friendPairs" class="ru.yandex.practicum.filmorate.storage.activity.friends.InMemoryFriendPairsStorage"></bean>
-    <bean id="UserService" class="ru.yandex.practicum.filmorate.service.user.UserService" autowire="constructor"></bean>
+    <bean id="UserService" class="ru.yandex.practicum.filmorate.service.user.UserService" autowire="constructor"></bean-->
 
 
 </beans>

@@ -9,6 +9,10 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
+/**
+ * DTO-класс информации о пользователе
+ * ТЗ-9
+ */
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class User extends Entity {

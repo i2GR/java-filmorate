@@ -42,15 +42,12 @@ public interface EntityStorable<T extends Entity> {
      * @param id идентификатор экземпляра entity для удаления
      * @return экземпляр, удаленный и полученный из хранилища
      */
-    //TODO
-    //тест?
     T delete(Long id);
 
     /**
      * получение списка всех фильмов или пользователей
      * @return список
      */
-    //TODO
     //параметры метода или новый метод
     List<T> getAll();
 }

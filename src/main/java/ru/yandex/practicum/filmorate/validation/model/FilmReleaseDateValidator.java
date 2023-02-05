@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 /**
  * реализация аннтоции для проверки даты выпуска фильма (не ранее даты изобретения)
+ * ТЗ-9
  */
 public class FilmReleaseDateValidator implements ConstraintValidator<AfterCinemaInvention, LocalDate> {
 

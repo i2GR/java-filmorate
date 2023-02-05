@@ -11,6 +11,11 @@ import ru.yandex.practicum.filmorate.model.activity.ActivityEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Хранилище в ОЗУ с базовым функционалом для активностей
+ * ТЗ-10
+ * @param <T> подкласс Активности, для которого определен метод получения по идентификатору
+ */
 @Slf4j
 @RequiredArgsConstructor
 public abstract class InMemoryActivityStorage<T extends ActivityEvent> {

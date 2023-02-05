@@ -1,19 +1,35 @@
 package ru.yandex.practicum.filmorate.service;
 
+
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.lang.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import ru.yandex.practicum.filmorate.model.entity.Entity;
 import ru.yandex.practicum.filmorate.storage.entity.EntityStorable;
 
-import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Сервис с базовым функционалом:
+ *  добавление / обновление / получение по идентификатору / удаоения / получения списка
+ *  (реализация ТЗ-9)
+ *  применяется для объектов, к которым применяются идентификатор (фильм, пользователь)
+ * @implNote двойное наследование/имплементация(вопрос комментария)
+ * Аналогичный вопрос по BasicController
+ * @param <T>подкласс Entity, для которого определен метод получения по идентификатору
+ */
+/*
+Вопрос: должен ли этот абстрактный класс имплементировать EntityServable
+с учетом того, что InMemory...Service наследуются от BasicEntityService и применяет ...Service по ТЗ
+...Service наследуется от EntityServable
+для класса Сервиса получается и наследование от абстрактного класса и применение дженерик-интерфеса через наследника
+Аналогичный вопрсо есть и понаследованию контроллеров
+ */
 @Slf4j
 @RequiredArgsConstructor
-public abstract class BasicEntityService<T extends Entity> {
+public abstract class BasicEntityService<T extends Entity> implements EntityServable<T> {
 
     private Long id = 1L;
 
@@ -32,7 +48,7 @@ public abstract class BasicEntityService<T extends Entity> {
         return storage.create(entity);
     }
 
-    public T getEntity(@Valid Long entityId){
+    public T getEntity(@NonNull Long entityId){
         return storage.read(entityId);
     }
 
