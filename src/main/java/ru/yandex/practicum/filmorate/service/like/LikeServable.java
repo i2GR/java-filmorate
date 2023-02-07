@@ -32,5 +32,5 @@ public interface LikeServable {
      * @param count количество фильмов, которое должно содержатсья в списке
      * @return сортированный список по убыванию
      */
-    List<Film> getToplikedFilms(Integer count);
+    List<Film> getTopLikedFilms(Integer count);
 }

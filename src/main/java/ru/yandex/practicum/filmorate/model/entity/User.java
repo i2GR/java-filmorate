@@ -20,6 +20,7 @@ public class User extends Entity {
     private String email;
 
     @NotNull(message = "User.login is null")
+
     @Pattern(regexp = "^\\w+$", message = "User.login contains non letter or digit symbols")
     private String login;
 
@@ -27,5 +28,4 @@ public class User extends Entity {
 
     @PastOrPresent(message = "User.birthdate is in Future")
     private LocalDate birthday;
-
 }

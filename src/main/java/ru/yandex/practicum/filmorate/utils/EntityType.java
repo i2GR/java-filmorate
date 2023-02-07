@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.utils;
 
 /**
- * перечисление хранимых сущностей
+ * перечисление хранимых сущностей<p>
  * ТЗ-10
  */
 public enum EntityType {

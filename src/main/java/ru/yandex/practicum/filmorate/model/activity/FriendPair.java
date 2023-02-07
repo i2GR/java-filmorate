@@ -34,8 +34,12 @@ public class FriendPair extends ActivityEvent {
      */
     @Override
     public Optional<Long> getPairedId(Long userId) {
-        if (userId.longValue() == friendIdOne.longValue()) return Optional.of(friendIdTwo);
-        if (userId.longValue() == friendIdTwo.longValue()) return Optional.of(friendIdOne);
+        if (userId.longValue() == friendIdOne.longValue()) {
+            return Optional.of(friendIdTwo);
+        }
+        if (userId.longValue() == friendIdTwo.longValue()) {
+            return Optional.of(friendIdOne);
+        }
         return Optional.empty();
     }
 
@@ -47,8 +51,12 @@ public class FriendPair extends ActivityEvent {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FriendPair that = (FriendPair) o;
         return (friendIdOne.equals(that.friendIdOne) && friendIdTwo.equals(that.friendIdTwo))
                 || (friendIdOne.equals(that.friendIdTwo) && friendIdTwo.equals(that.friendIdOne));

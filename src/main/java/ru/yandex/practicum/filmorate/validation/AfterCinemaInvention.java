@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.validation.model;
+package ru.yandex.practicum.filmorate.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
 /**
  * Аннтоция для проверки даты выпуска фильма
  * имплементация: {@link FilmReleaseDateValidator}
- * ТЗ-9
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

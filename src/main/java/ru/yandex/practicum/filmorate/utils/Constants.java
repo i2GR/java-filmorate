@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.utils;
 import java.time.LocalDate;
 
 /**
- * класс, содержащий конcтанты
+ * класс, содержащий конcтанты<p>
  * с ТЗ-9
  */
 public abstract class Constants {

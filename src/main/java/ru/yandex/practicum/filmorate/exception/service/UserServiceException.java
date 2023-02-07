@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.model.entity.User;
 public class UserServiceException extends RuntimeException {
 
     @Getter
-    private User user;
+    private final User user;
 
     /**
      * исключение класса UserService при ошибке

@@ -21,7 +21,7 @@
         </encoder>
         <append>false</append>
     </appender>
-    <appender name="ExceptionLog" class="ch.qos.logback.core.FileAppender">
+    <appender name="ValidationExceptionLog" class="ch.qos.logback.core.FileAppender">
         <file>src/main/resources/logs/ExceptionLog.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
@@ -53,7 +53,7 @@
         <appender-ref ref="StorageLog"/>
     </logger>
     <logger name ="ru.yandex.practicum.filmorate.exception.validation.ValidationExceptionHandler" level="warn">
-        <appender-ref ref="ExceptionLog"/>
+        <appender-ref ref="ValidationExceptionLog"/>
     </logger>
     <logger name ="ru.yandex.practicum.filmorate.exception.storage.StorageExceptionHandler" level="warn">
         <appender-ref ref="StorageExceptionLog"/>

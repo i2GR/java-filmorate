@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.yandex.practicum.filmorate.validation.model.AfterCinemaInvention;
+import ru.yandex.practicum.filmorate.validation.AfterCinemaInvention;
 import ru.yandex.practicum.filmorate.utils.Constants;
 
 import javax.validation.constraints.NotBlank;
@@ -30,5 +30,4 @@ public class Film extends Entity {
 
     @Positive(message = "Film.duration is zero or negative")
     private int duration;
-
 }

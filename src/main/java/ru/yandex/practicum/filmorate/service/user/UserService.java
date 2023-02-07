@@ -1,17 +1,17 @@
 package ru.yandex.practicum.filmorate.service.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.service.UserServiceException;
 import ru.yandex.practicum.filmorate.model.activity.FriendPair;
 import ru.yandex.practicum.filmorate.model.entity.User;
-import ru.yandex.practicum.filmorate.service.BasicEntityService;
+import ru.yandex.practicum.filmorate.service.IdServable;
+import ru.yandex.practicum.filmorate.service.IdService;
 import ru.yandex.practicum.filmorate.service.friend.FriendServable;
 import ru.yandex.practicum.filmorate.storage.activity.friends.FriendsStorable;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
-import ru.yandex.practicum.filmorate.utils.EntityType;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,42 +24,61 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class UserService extends BasicEntityService<User> implements UserServable, FriendServable {
+@RequiredArgsConstructor
+public class UserService implements UserServable, FriendServable {
 
-    @Autowired
+    @NonNull
     private final FriendsStorable friendPairsStorage;
 
-    public UserService(@NonNull FriendsStorable FriendsStorable, @NonNull UserStorage userStorage) {
-        super(EntityType.USER.val(), userStorage);
-        this.friendPairsStorage = FriendsStorable;
-    }
+    /**
+     * хранилище пользователей
+     */
+    @NonNull
+    protected final UserStorage userStorage;
 
     /**
-     * перегружен для работы проверки имени пользователя
-     *  в случае отсутствия присвоение имени по логину
+     * сервис-слой обновлению идентификатора
+     */
+    private final IdServable<User> idService = new IdService<>(0L);
+
+    /**
+     * реализация с проверкой наличия идентификатора
+     * реализация с присвоениемимени пользователя в случае отсутствия присвоение имени по логину
      */
     @Override
-    public User addNewEntity(User user) {
-        return super.addNewEntity(renameOnLogin(user));
+    public User create(User user) {
+        user = idService.getEntityWithCheckedId(user);
+        user = renameOnLogin(user);
+        return userStorage.create(user);
+    }
+
+    @Override
+    public User readById(@NonNull Long entityId){
+        return userStorage.readById(entityId);
     }
 
     /**
-     * перегружен для работы проверки имени пользователя
-     *  в случае отсутствия присвоение имени по логину
+     * реализация с присвоением имени пользователя в случае отсутствия присвоение имени по логину
      */
     @Override
-    public User updateEntity(User user) {
-        return super.updateEntity(renameOnLogin(user));
+    public User update(User user) {
+        user = renameOnLogin(user);
+        return userStorage.update(user);
+    }
+
+    @Override
+    public List<User> readAll() {
+        return userStorage.readAll();
     }
 
     /**
-     * перегружен для работы проверки наличия пользователей в хранилище
-     *  в случае отсутитвия присвоение имени по логину
+     * реализация с проверкой наличия пользователей в хранилище
+     * при отсутствии фильма или пользователя будет выброшено исключение
      */
     @Override
     public FriendPair joinUpFriends(@Valid Long userId1, @Valid Long userId2) {
-        storage.read(userId1);
-        storage.read(userId2);
+        userStorage.readById(userId1);
+        userStorage.readById(userId2);
         return friendPairsStorage.create(new FriendPair(userId1, userId2));
     }
 
@@ -75,19 +94,19 @@ public class UserService extends BasicEntityService<User> implements UserServabl
 
     @Override
     public List<User> getMutualFriends(@Valid Long userId1, @Valid Long userId2) {
-        Set<Long> userId1Friends = friendPairsStorage.getActivitiesById(userId1);
-        Set<Long> userId2Friends = friendPairsStorage.getActivitiesById(userId2);
+        Set<Long> userId1Friends = friendPairsStorage.getFriendsById(userId1);
+        Set<Long> userId2Friends = friendPairsStorage.getFriendsById(userId2);
         return userId1Friends.stream()
                 .filter(userId2Friends::contains)
-                .map(this::getEntity)
+                .map(this::readById)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<User> getAllFriends(@Valid Long id) {
-        return friendPairsStorage.getActivitiesById(id)
+        return friendPairsStorage.getFriendsById(id)
                 .stream()
-                .map(storage::read)
+                .map(userStorage::readById)
                 .collect(Collectors.toList());
     }
 
@@ -109,6 +128,4 @@ public class UserService extends BasicEntityService<User> implements UserServabl
         }
         return user;
     }
-
-
 }

@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,7 +28,6 @@ import java.util.Optional;
 @RequestMapping("/films")
 public class LikeController {
 
-    @Autowired
     @NonNull
     private final LikeServable service;
 
@@ -48,7 +46,7 @@ public class LikeController {
     @GetMapping("/popular")
     public List<Film> getLikedFilms(@RequestParam (name = "count") Optional<Integer> countParam) {
         log.info("requested top films");
-        Integer count = countParam.isEmpty() ? Constants.DEFAULT_POPULAR_FILMS_AMOUNT : countParam.get();
-        return service.getToplikedFilms(count);
+        Integer count = countParam.orElse(Constants.DEFAULT_POPULAR_FILMS_AMOUNT);
+        return service.getTopLikedFilms(count);
     }
 }
