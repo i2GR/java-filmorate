@@ -1,4 +1,6 @@
-package ru.yandex.practicum.filmorate.controller.validation;
+package ru.yandex.practicum.filmorate.validation;
+
+import ru.yandex.practicum.filmorate.utils.Constants;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -10,6 +12,6 @@ import java.time.LocalDate;
 public class FilmReleaseDateValidator implements ConstraintValidator<AfterCinemaInvention, LocalDate> {
 
     public boolean isValid(LocalDate filmDate, ConstraintValidatorContext cxt) {
-        return (FixedValues.CINEMA_BIRTHDAY).isBefore(filmDate) || (FixedValues.CINEMA_BIRTHDAY).isEqual(filmDate);
+        return (Constants.CINEMA_BIRTHDAY).isBefore(filmDate) || (Constants.CINEMA_BIRTHDAY).isEqual(filmDate);
     }
 }

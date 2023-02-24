@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.utils;
 
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.entity.Film;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ public class TestFilmBuilder {
     private final Film film = new Film();
 
     public TestFilmBuilder defaultFilm () {
-        setId(1);
+        setId(1L);
         setName("title");
         setDescription("Description");
         setReleaseDate(LocalDate.EPOCH);
@@ -17,7 +17,7 @@ public class TestFilmBuilder {
         return this;
     }
 
-    public TestFilmBuilder setId(int id) {
+    public TestFilmBuilder setId(Long id) {
         film.setId(id);
         return this;
     }

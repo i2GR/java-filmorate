@@ -1,15 +1,19 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.yandex.practicum.filmorate.controller.validation.AfterCinemaInvention;
-import ru.yandex.practicum.filmorate.controller.validation.FixedValues;
+import ru.yandex.practicum.filmorate.validation.AfterCinemaInvention;
+import ru.yandex.practicum.filmorate.utils.Constants;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+/**
+ * DTO-класс информации о фильме
+ * ТЗ-9
+ */
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class Film extends Entity {
@@ -18,7 +22,7 @@ public class Film extends Entity {
     private String name;
 
     @NotBlank(message = "Film.description is blank")
-    @Size(max = FixedValues.MAX_MOVIE_DESCR_LENGTH, message = "Film.description too long")
+    @Size(max = Constants.MAX_MOVIE_DESCR_LENGTH, message = "Film.description too long")
     private String description;
 
     @AfterCinemaInvention
@@ -26,5 +30,4 @@ public class Film extends Entity {
 
     @Positive(message = "Film.duration is zero or negative")
     private int duration;
-
 }

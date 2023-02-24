@@ -1,56 +1,68 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.yandex.practicum.filmorate.controller.validation.ValidationException;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.BasicModelHandling;
+import ru.yandex.practicum.filmorate.ValidThrowable;
+import ru.yandex.practicum.filmorate.model.entity.User;
+import ru.yandex.practicum.filmorate.service.user.UserServable;
 
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * реализация  базового CRUD-функционала ендпойнтов для пользователей
+ * ТЗ-9
+ * @see ValidThrowable
+ */
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
-public class UserController extends BasicController<User> {
+public class UserController implements BasicModelHandling<User>, ValidThrowable {
 
-    public UserController() {
-        super("User");
-    }
+    @NonNull
+    private final UserServable userService;
 
+    @Override
     @PostMapping
-    public User addNewUser(@Valid @RequestBody User user) {
-        return super.addNew(renameOnLogin(user));
+    public User create(@Valid @RequestBody User user) {
+        log.info("add user request");
+        return userService.create(user);
     }
 
+    @Override
+    @GetMapping("/{id}")
+    public User readById(@Valid @PathVariable Long id) {
+        log.info("get user request with id {}", id);
+        return userService.readById(id);
+    }
+
+    @Override
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) {
-        return super.update(renameOnLogin(user));
+    public User update(@NonNull @Valid @RequestBody User user) {
+        log.info("update user request with id {}", user.getId());
+        return userService.update(user);
     }
 
+    @Override
     @GetMapping
-    public List<User> getAllUsers() {
-        return super.getAll();
+    public List<User> readAll() {
+        log.info("get all users request");
+        return userService.readAll();
     }
 
-    /**
-     * метод для подстановки логина пользователя в качестве имени при незаполненном поле Name
-     * @param user экз. User из запроса
-     * @return экз. User с заполенным полем Name
-     * @throws ValidationException исключение
-     */
-    private User renameOnLogin(User user) throws ValidationException {
-        try {
-            String userName = user.getName();
-            if (userName == null || userName.isBlank()) {
-                user.setName(user.getLogin());
-                BasicController.getLog().info("User.name received is empty. User renamed based on Login");
-            }
-        } catch (NullPointerException npe) {
-            throw new ValidationException("Non correct User object received");
-        }
-        return user;
+    @Override
+    public Logger log() {
+        return log;
     }
 }

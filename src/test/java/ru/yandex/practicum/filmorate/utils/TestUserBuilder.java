@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.utils;
 
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.entity.User;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ public class TestUserBuilder {
     private final User user = new User();
 
     public TestUserBuilder defaultUser () {
-        setId(1);
+        setId(1L);
         setName("name");
         setEmail("email@host.dom");
         setLogin("login");
@@ -17,7 +17,7 @@ public class TestUserBuilder {
         return this;
     }
 
-    public TestUserBuilder setId(int id) {
+    public TestUserBuilder setId(Long id) {
         user.setId(id);
         return this;
     }

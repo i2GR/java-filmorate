@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,6 +9,10 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
+/**
+ * DTO-класс информации о пользователе
+ * ТЗ-9
+ */
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class User extends Entity {
@@ -16,6 +20,7 @@ public class User extends Entity {
     private String email;
 
     @NotNull(message = "User.login is null")
+
     @Pattern(regexp = "^\\w+$", message = "User.login contains non letter or digit symbols")
     private String login;
 
@@ -23,5 +28,4 @@ public class User extends Entity {
 
     @PastOrPresent(message = "User.birthdate is in Future")
     private LocalDate birthday;
-
 }

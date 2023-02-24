@@ -1,8 +1,9 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.entity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controller.validation.FixedValues;
+import ru.yandex.practicum.filmorate.model.entity.Film;
+import ru.yandex.practicum.filmorate.utils.Constants;
 import ru.yandex.practicum.filmorate.utils.TestFilmBuilder;
 
 import javax.validation.ConstraintViolation;
@@ -86,7 +87,7 @@ class FilmTest {
 
     @Test
     void descriptionSizeEqualsMaxDescriptionLength() {
-        film.setDescription("-".repeat(FixedValues.MAX_MOVIE_DESCR_LENGTH));
+        film.setDescription("-".repeat(Constants.MAX_MOVIE_DESCR_LENGTH));
 
         Set<ConstraintViolation<Film>> constraintViolations = validator.validate(film);
 
@@ -95,7 +96,7 @@ class FilmTest {
 
     @Test
     void descriptionSizeExceedsMaxDescriptionLength() {
-        film.setDescription("-".repeat(FixedValues.MAX_MOVIE_DESCR_LENGTH + 1));
+        film.setDescription("-".repeat(Constants.MAX_MOVIE_DESCR_LENGTH + 1));
 
         Set<ConstraintViolation<Film>> constraintViolations = validator.validate(film);
 
@@ -134,7 +135,7 @@ class FilmTest {
 
     @Test
     void releaseDateIsCinemaBirthday() {
-        film.setReleaseDate(FixedValues.CINEMA_BIRTHDAY);
+        film.setReleaseDate(Constants.CINEMA_BIRTHDAY);
 
         Set<ConstraintViolation<Film>> constraintViolations = validator.validate(film);
 
@@ -143,7 +144,7 @@ class FilmTest {
 
     @Test
     void releaseDateIsBeforeCinemaBirthday() {
-        film.setReleaseDate(FixedValues.CINEMA_BIRTHDAY
+        film.setReleaseDate(Constants.CINEMA_BIRTHDAY
                             .minusDays(1));
 
         Set<ConstraintViolation<Film>> constraintViolations = validator.validate(film);
