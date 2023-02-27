@@ -19,8 +19,8 @@ public class FriendPair extends ActivityEvent {
     private final Long friendIdTwo;
 
     public FriendPair(Long idOne, Long idTwo) {
-        friendIdOne = idOne;
-        friendIdTwo = idTwo;
+        friendIdOne = Math.min(idOne, idTwo);
+        friendIdTwo = Math.max(idOne, idTwo);
     }
 
     /**

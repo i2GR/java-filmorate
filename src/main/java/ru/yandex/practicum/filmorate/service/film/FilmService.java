@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.activity.Like;
@@ -36,6 +37,7 @@ public class FilmService implements FilmServable, LikeServable {
     private final FilmStorage filmStorage;
 
     @NonNull
+    @Qualifier("userDBStorage")
     private final UserStorage userStorage;
 
     /**
