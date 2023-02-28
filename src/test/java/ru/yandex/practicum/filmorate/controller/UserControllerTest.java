@@ -2,13 +2,16 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.BasicModelHandling;
 import ru.yandex.practicum.filmorate.model.entity.User;
+import ru.yandex.practicum.filmorate.service.user.InMemoryUserService;
 import ru.yandex.practicum.filmorate.service.user.UserServable;
-import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.activity.friends.InMemoryFriendPairsStorage;
 import ru.yandex.practicum.filmorate.storage.entity.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
 import ru.yandex.practicum.filmorate.utils.TestUserBuilder;
+
+import java.time.LocalDate;
 
 class UserControllerTest extends ControllerTest<User>{
 
@@ -17,14 +20,20 @@ class UserControllerTest extends ControllerTest<User>{
     private UserControllerTest() {
         super();
         storage = new InMemoryUserStorage();
-        service = new UserService(new InMemoryFriendPairsStorage(), (UserStorage) storage);
+        service = new InMemoryUserService(new InMemoryFriendPairsStorage(), (UserStorage) storage);
         controller = new UserController((UserServable) service);
     }
 
     @BeforeEach
     void setup() {
-        TestUserBuilder builder = new TestUserBuilder();
-        user = builder.defaultUser().build();
+        //TestUserBuilder builder = new TestUserBuilder();
+        user = User.builder()
+                    .id(1L)
+                    .name("name")
+                    .email("email@host.dom")
+                    .login("login")
+                    .birthday(LocalDate.EPOCH)
+                    .build();
     }
 
     @Test

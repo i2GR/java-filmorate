@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.BasicModelHandling;
 import ru.yandex.practicum.filmorate.model.entity.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmServable;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
@@ -10,6 +11,8 @@ import ru.yandex.practicum.filmorate.storage.entity.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.entity.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.entity.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.utils.TestFilmBuilder;
+
+import java.time.LocalDate;
 
 class FilmControllerTest extends ControllerTest<Film>{
 
@@ -24,8 +27,14 @@ class FilmControllerTest extends ControllerTest<Film>{
 
     @BeforeEach
     void setup() {
-        TestFilmBuilder builder = new TestFilmBuilder();
-        film = builder.defaultFilm().build();
+        //TestFilmBuilder builder = new TestFilmBuilder();
+        film = Film.builder()
+                .id(1L)
+                .name("title")
+                .description("Description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(100)
+                .build();
     }
 
     @Test

@@ -3,8 +3,8 @@ package ru.yandex.practicum.filmorate.storage.activity.likes;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.storage.StorageDuplicateException;
-import ru.yandex.practicum.filmorate.exception.storage.StorageNotFoundException;
+import ru.yandex.practicum.filmorate.exception.StorageDuplicateException;
+import ru.yandex.practicum.filmorate.exception.StorageNotFoundException;
 import ru.yandex.practicum.filmorate.model.activity.Like;
 
 import java.util.HashSet;

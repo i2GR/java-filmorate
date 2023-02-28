@@ -51,17 +51,20 @@ public class FilmService implements FilmServable, LikeServable {
     @Override
     public Film create (@NonNull Film film) {
         film = idService.getEntityWithCheckedId(film);
-        return filmStorage.create(film);
+        //TODO
+        return null;//getFromOptionalOrThrowException(filmStorage.create(film), "");
     }
 
     @Override
     public Film readById(@NonNull Long entityId){
-        return filmStorage.readById(entityId);
+        //TODO
+        return null;//getFromOptionalOrThrowException(filmStorage.readById(entityId), "");
     }
 
     @Override
     public Film update(Film film) {
-        return filmStorage.update(film);
+        //TODO
+        return null;//getFromOptionalOrThrowException(filmStorage.update(film), "");
     }
 
     @Override

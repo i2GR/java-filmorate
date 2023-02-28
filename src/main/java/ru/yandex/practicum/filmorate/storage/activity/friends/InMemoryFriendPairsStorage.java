@@ -4,8 +4,8 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import ru.yandex.practicum.filmorate.exception.storage.StorageDuplicateException;
-import ru.yandex.practicum.filmorate.exception.storage.StorageNotFoundException;
+import ru.yandex.practicum.filmorate.exception.StorageDuplicateException;
+import ru.yandex.practicum.filmorate.exception.StorageNotFoundException;
 import ru.yandex.practicum.filmorate.model.activity.FriendPair;
 
 import java.util.HashSet;
@@ -24,39 +24,47 @@ public class InMemoryFriendPairsStorage implements FriendsStorable {
 
     private final Set<FriendPair> friendPairSet = new HashSet<>();
 
-    public FriendPair create(FriendPair friendPair) {
+    public Optional<FriendPair> create(Long initiatorId, Long friendId) {
         log.debug("creating friends status");
+        FriendPair friendPair = new FriendPair(initiatorId, friendId);
         if (friendPairSet.add(friendPair)) { // события не было -> добавление
             log.debug("recorded friends status of userIds {} and {}"
                                             , friendPair.getFriendIdOne()
                                             , friendPair.getFriendIdTwo());
-            return friendPair;
+            return Optional.of(friendPair);
         }
         throw new StorageDuplicateException(String.format("users %s and %s are already friends"
                                             , friendPair.getFriendIdOne().toString()
                                             , friendPair.getFriendIdTwo().toString()));
     }
 
-    public boolean read(FriendPair friendPair) {
+/*    public boolean read(FriendPair friendPair) {
         log.debug("reading friend status of {} and {}"
                                             , friendPair.getFriendIdOne()
                                             , friendPair.getFriendIdTwo());
         return friendPairSet.contains(friendPair);
-    }
+    }*/
 
-    public FriendPair delete(FriendPair friendPair) {
+    @Override
+    public Optional<FriendPair> delete(Long ownerId, Long friendId) {
         log.debug("deleting friends status of {} and {}"
-                                            , friendPair.getFriendIdOne()
-                                            , friendPair.getFriendIdTwo());
+                                            , ownerId
+                                            , friendId);
+        FriendPair friendPair = new FriendPair(ownerId, friendId);
         if (friendPairSet.remove(friendPair)) {
             log.debug("deleted");
-            return friendPair;
+            return Optional.of(friendPair);
         }
         throw new StorageNotFoundException(String.format("users %s and %s are not present"
                                             , friendPair.getFriendIdOne().toString()
                                             , friendPair.getFriendIdTwo().toString()));
     }
 
+    /**
+     * получение списка всех друзей пользователя по переданному идентификатору
+     * @param id идентификатор искомого пользователя
+     * @return Сет идентификаторов пользователей-друзей
+     */
     public Set<Long> getFriendsById(Long id) {
         log.debug("get List of friends by id {}", id);
         return friendPairSet.stream()

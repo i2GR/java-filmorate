@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import ru.yandex.practicum.filmorate.model.Identable;
 import ru.yandex.practicum.filmorate.utils.FilmGenre;
 import ru.yandex.practicum.filmorate.utils.FilmRating;
 import ru.yandex.practicum.filmorate.validation.AfterCinemaInvention;
@@ -18,8 +20,11 @@ import java.util.List;
  * ТЗ-9
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper=false)
 public class Film extends Entity {
+
+    private Long id;
 
     @NotBlank(message = "Film.name is blank")
     private String name;

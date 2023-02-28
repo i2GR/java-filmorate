@@ -13,30 +13,22 @@ public interface FriendServable {
 
     /**
      * получение статуса друзей двух пользователей
-     * @param userId1 идентификатор пользователя 1 (условный)
-     * @param userId2 идентификатор пользователя 2 (условный)
+     * @param ownerId идентификатор пользователя 1, добавляющего другого пользователя
+     * @param friendId идентификатор пользователя, добавляемого в друзья
      * @return DTO-класс с полями - идентификаторами пользователей
-     * @implNote DTO класс должен предусматривать, чтобы поля были симметричны
-     * два объекта должны быть равны,
-     * если userId1(1) = userId1(2) || userId2(1) = userId2(2) || userId1(2) = userId2(1) || userId2(2) = userId1(1)
+     * @implNote DTO класс должен предусматривать, что userId1 < userId2
+     * <p><p> ТЗ-11:<p>пользователь с receiverId получает пользователя с initiatorId в список друзей
+     * при этом у пользователя с initiatorId в списке друзей не будет пользователя с receiverId
      */
-    FriendPair joinUpFriends(Long userId1, Long userId2);
-
-    /**
-     * проверка являются ли два пользователя "друзьями"
-     * @param userId1 идентификатор пользователя 1 (условный)
-     * @param userId2 идентификатор пользователя 2 (условный)
-     * @return true, если являются, false - иначе
-     */
-    boolean areFriends(Long userId1, Long userId2);
+    FriendPair joinUpFriends(Long ownerId, Long friendId);
 
     /**
      * прекращение статуса друзей двух пользователей
-     * @param userId1 идентификатор пользователя 1 (условный)
-     * @param userId2 идентификатор пользователя 2 (условный)
+     * @param ownerId идентификатор пользователя, который удаляет другого пользователя
+     * @param friendId идентификатор пользователя, удаляемого из друзей
      * @return DTO-класс с полями -  идентификаторами пользователей
      */
-    FriendPair breakFriends(Long userId1, Long userId2);
+    FriendPair breakFriends(Long ownerId, Long friendId);
 
     /**
      * получение списка общих друзей для двух пользователей

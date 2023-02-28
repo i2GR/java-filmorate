@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.exception.storage;
+package ru.yandex.practicum.filmorate.exception;
 
 /**
  * исключение при операциях в слое хранилища при наличии дупликатов сущностей
