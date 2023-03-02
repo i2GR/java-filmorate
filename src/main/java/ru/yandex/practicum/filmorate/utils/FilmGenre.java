@@ -15,6 +15,9 @@ public enum FilmGenre {
 
     private final String  displayText;
 
+    /**
+     * отображение жанра фильма в виде строки Первая заглавная - остальные строчные
+     */
     FilmGenre() {
         String str = this.toString();
         displayText = str.toLowerCase().replace((char) (str.charAt(0) + 32), str.charAt(0));

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 /**
  * реализация слоя хранилища для лайков
  * ТЗ-10
+ * <p>Хранилище In-Memory
  */
 @Slf4j
 @Component
@@ -23,11 +24,11 @@ public class InMemoryLikesStorage implements LikeStorable {
 
     private final Set<Like> likeSet = new HashSet<>();
 
-    public Like create(Like like) {
+    public Optional<Like> create(Like like) {
         log.debug("creating Like of user {} for film {}", like.getUserId(), like.getFilmId());
         if (likeSet.add(like)) { // события не было -> добавление
             log.debug("Like recorded in memory");
-            return like;
+            return Optional.of(like);
         }
         throw new StorageDuplicateException("Like to add is already exists");
     }
@@ -37,11 +38,11 @@ public class InMemoryLikesStorage implements LikeStorable {
         return likeSet.contains(like);
     }
 
-    public Like delete(Like like) {
+    public Optional<Like> delete(Like like) {
         log.debug("deleting like of user {} for film {}", like.getUserId(), like.getFilmId());
         if (likeSet.remove(like)) {
             log.debug("deleted");
-            return like;
+            return Optional.of(like);
         }
         throw new StorageNotFoundException(String.format("Like of user %s to film %s is not present"
                                                         , like.getUserId().toString()

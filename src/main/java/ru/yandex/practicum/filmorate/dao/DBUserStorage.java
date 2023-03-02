@@ -104,7 +104,7 @@ public class DBUserStorage implements UserStorage {
     private Optional<User> readUserFromDB (String sqlQuery, Long id) {
         try {
             User user = jdbcTemplate.queryForObject(sqlQuery, new UserRowMapper(), id);
-            return Optional.of(user);
+            return Optional.ofNullable(user);
         } catch (DataAccessException dae) {
             return Optional.empty();
         }

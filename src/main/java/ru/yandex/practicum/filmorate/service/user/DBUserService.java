@@ -40,7 +40,7 @@ public class DBUserService implements UserServable {
     public User create(User user) {
         user = renameOnLogin(user);
         Optional<User> optionalUser = userStorage.create(user);
-        log.info("received data from DB {}", optionalUser.isPresent());
+        log.info("received data from DB {} when record:", optionalUser.isPresent());
         return optionalUser.orElseThrow();
     }
 

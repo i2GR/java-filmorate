@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.StorageDuplicateException;
@@ -34,13 +33,13 @@ public class DBFriendsStorage implements FriendsStorable {
     @Override
     public Optional<FriendPair> create(@Valid Long ownerId, @Valid Long friendId) {
         String sqlQuery = "INSERT INTO friends (owner_id, friend_id) VALUES (?, ?);";
-        return insertNewFriendForOwner(sqlQuery, ownerId, friendId);
+        return updateFriendForOwner(sqlQuery, ownerId, friendId);
     }
 
     @Override
     public Optional<FriendPair> delete(@Valid Long ownerId, @Valid Long friendId) {
         String sqlQuery = "DELETE FROM friends WHERE owner_id = ? AND  friend_id = ?;";
-        return deleteFriendForOwner(sqlQuery, ownerId, friendId);
+        return updateFriendForOwner(sqlQuery, ownerId, friendId);
     }
 
     public List<User> getMutualFriends(@Valid Long userId1, @Valid Long userId2) {
@@ -63,28 +62,20 @@ public class DBFriendsStorage implements FriendsStorable {
         return jdbcTemplate.query(sqlQuery, new UserRowMapper(), id);
     }
 
-    private Optional<FriendPair> insertNewFriendForOwner(String sqlQuery, Long ownerId, Long friendId) {
+    private Optional<FriendPair> updateFriendForOwner(String sqlQuery, Long ownerId, Long friendId)
+                                                       {
         try {
-            return updateRecord(sqlQuery, ownerId, friendId);
-        } catch (DataAccessException e) {
+            int affectedRows = jdbcTemplate.update(sqlQuery, ownerId, friendId);
+            if (affectedRows == 1) {
+                return Optional.of(new FriendPair(ownerId, friendId));
+            }
             throw new StorageDuplicateException(
-                    String.format("error inserting friend with %d by user id %d", friendId, ownerId));
-        }
-    }
-
-    private Optional<FriendPair> deleteFriendForOwner(String sqlQuery, Long ownerId, Long friendId) {
-        try {
-            return updateRecord(sqlQuery, ownerId, friendId);
-        } catch (DataAccessException e) {
+                                String.format("duplicated data in DB for friends-owner with id %d and friend with id %d"
+                                , ownerId, friendId));
+        } catch (Exception e) {
             throw new StorageNotFoundException(
-                    String.format("not found friend with id %d for user id %d to delete", friendId, ownerId));
+                                String.format("error searching for found DB record with id %d for user id %d"
+                                , friendId, ownerId));
         }
-    }
-
-    private Optional<FriendPair> updateRecord(String sqlQuery, Long ownerId, Long friendId) throws DataAccessException{
-        if (jdbcTemplate.update(sqlQuery, ownerId, friendId) == 1) {
-            return Optional.of(new FriendPair(ownerId, friendId));
-        }
-        return Optional.empty();
     }
 }

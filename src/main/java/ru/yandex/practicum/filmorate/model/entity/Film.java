@@ -1,11 +1,7 @@
 package ru.yandex.practicum.filmorate.model.entity;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import ru.yandex.practicum.filmorate.model.Identable;
-import ru.yandex.practicum.filmorate.utils.FilmGenre;
-import ru.yandex.practicum.filmorate.utils.FilmRating;
+import lombok.*;
+import ru.yandex.practicum.filmorate.model.FilmMPARating;
 import ru.yandex.practicum.filmorate.validation.AfterCinemaInvention;
 import ru.yandex.practicum.filmorate.utils.Constants;
 
@@ -13,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +18,8 @@ import java.util.List;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 public class Film extends Entity {
 
@@ -39,11 +38,16 @@ public class Film extends Entity {
     @Positive(message = "Film.duration is zero or negative")
     private int duration;
 
-    //TODO
-    //Аннотации (пустой?)
-    private List<FilmGenre> genres;
+    /**
+     * по результатам мозгового штурма: рейтинг фильма на основе лайков
+     * @implNote ???<p>необходимая реализация неизвестна: количество ли лайков или место ли в рейтинге на его основе<p>???
+     * <p>ТЗ-11
+     */
+    @Builder.Default
+    private Integer rate = 0;
 
-    //TODO
-    //Аннотации (пустой?)
-    private FilmRating rating;
+    @Builder.Default
+    private List<String> genres = new ArrayList<>();
+
+    private FilmMPARating mpa;
 }

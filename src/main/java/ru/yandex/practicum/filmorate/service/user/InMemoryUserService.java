@@ -69,7 +69,7 @@ public class InMemoryUserService implements UserServable, FriendServable {
     public User update(User user) {
         user = renameOnLogin(user);
         Optional<User> optionalUser = userStorage.update(user);
-        log.info("received data from InMemory {}", optionalUser.isPresent());
+        log.info("updated data InMemory {}", optionalUser.isPresent());
         return optionalUser.orElseThrow();
     }
 

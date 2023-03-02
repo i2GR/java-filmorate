@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -26,7 +28,7 @@ public class CommonExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid (MethodArgumentNotValidException exception) {
-        log.warn("Invalid request body111");
+        log.warn("Invalid request body");
         return new ResponseEntity<>(new ErrorResponse("error","Invalid request body")
                 , HttpStatus.BAD_REQUEST);
     }
@@ -64,6 +66,14 @@ public class CommonExceptionHandler {
     public ErrorResponse handleNoElement(NoSuchElementException exception) {
         log.warn(exception.getMessage());
         return new ErrorResponse("Not found", "no record DB matched request");
+    }
+
+    @ExceptionHandler({DataAccessException.class, SQLException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ErrorResponse handleDataAccessException(Exception exception) {
+        log.warn(exception.getMessage());
+        return new ErrorResponse("Error", "DB access error");
     }
 
     /**
