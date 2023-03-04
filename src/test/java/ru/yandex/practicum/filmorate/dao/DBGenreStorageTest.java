@@ -41,7 +41,6 @@ class DBGenreStorageTest {
         assertEquals(genreStorage.readGenreById(1).orElseThrow(), genre1);
         assertEquals(genreStorage.readGenreById(5).orElseThrow(), genre5);
         assertEquals(genreStorage.readGenreById(6).orElseThrow(), genre6);
-
     }
 
     @Test

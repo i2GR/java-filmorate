@@ -37,5 +37,4 @@ class InMemoryIdServiceTest {
 
         assertEquals(lastID + 1L, actual.getId().longValue());
     }
-
 }

@@ -17,11 +17,6 @@ public class FilmRowMapper implements RowMapper<Film> {
                 .releaseDate(resultSet.getDate("release").toLocalDate())
                 .duration(resultSet.getInt("duration"))
                 .rate(resultSet.getInt("rate"))
-                /* далее строится рейтинг вроде не по ORM ,т.к. рейтинг фильма формируется из одного запроса в БД -
-                 но вроде на вебинаре озвучивалась мысль, что нужно сокращать количество обращений в БД
-                 Получение для фильма и жанров тоже в один запров я уже не смог так осилить,
-                 и кажется, что это не KISS-ово
-                 */
                 .mpa(FilmMpaRating.builder()
                                   .id(resultSet.getInt("mpa_id"))
                                   .name(resultSet.getString("mpa")).build())

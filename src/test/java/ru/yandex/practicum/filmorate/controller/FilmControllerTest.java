@@ -26,7 +26,6 @@ class FilmControllerTest extends ControllerTest<Film>{
 
     @BeforeEach
     void setup() {
-        //TestFilmBuilder builder = new TestFilmBuilder();
         film = Film.builder()
                 .id(1L)
                 .name("title")

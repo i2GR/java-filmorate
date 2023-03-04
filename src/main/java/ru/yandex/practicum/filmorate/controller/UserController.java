@@ -54,4 +54,28 @@ public class UserController implements BasicModelHandling<User> {
         return userService.readAll();
     }
 
+
+
+    /**
+     * список пользователей, являющихся его друзьями
+     * @param id дентификатор пользователя список друзей которого формируется
+     * @return список друзей для данного пользователя
+     */
+    @GetMapping("/{id}/friends")
+    public List<User> getAllFriends(@PathVariable Long id) {
+        log.info("all-friends request for user {}", id);
+        return  userService.getAllFriends(id);
+    }
+
+    /**
+     * список друзей, общих с другим пользователем
+     * @param id идентификатор пользователя, условный номер 1
+     * @param otherId идентификатор пользователя, условный номер 2
+     * @return список друзей общих для пользователей условный номер 1 и условный номер 2
+     */
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getMutualFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        log.info("common-friends request for users {} {}", id, otherId);
+        return  userService.getMutualFriends(id, otherId);
+    }
 }

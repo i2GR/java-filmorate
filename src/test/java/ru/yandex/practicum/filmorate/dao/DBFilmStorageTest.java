@@ -46,7 +46,6 @@ class DBFilmStorageTest {
                 .isPresent()
                 .hasValueSatisfying(film ->
                         assertThat(film).hasNoNullFieldsOrProperties());
-
     }
 
     @Test
@@ -120,4 +119,3 @@ class DBFilmStorageTest {
         assertEquals(act + 1, exp);
     }
 }
-

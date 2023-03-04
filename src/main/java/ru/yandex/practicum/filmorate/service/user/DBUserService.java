@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.DBFriendsStorage;
 import ru.yandex.practicum.filmorate.model.entity.User;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * реализация CRUD-функционала в сервис-слое для пользователей
@@ -28,7 +32,8 @@ public class DBUserService implements UserServable {
      */
     @NonNull
     @Qualifier("userDBStorage")
-    private final UserStorage userStorage;
+    private final UserStorage userDBStorage;
+    private final DBFriendsStorage friendDBstorage;
 
     /**
      * создание пользователя в БД
@@ -39,14 +44,14 @@ public class DBUserService implements UserServable {
     @Override
     public User create(User user) {
         user = renameOnLogin(user);
-        Optional<User> optionalUser = userStorage.create(user);
+        Optional<User> optionalUser = userDBStorage.create(user);
         log.info("received data from DB {} when record:", optionalUser.isPresent());
         return optionalUser.orElseThrow();
     }
 
     @Override
     public User readById(@NonNull Long entityId){
-        Optional<User> optionalUser = userStorage.readById(entityId);
+        Optional<User> optionalUser = userDBStorage.readById(entityId);
         log.info("received data from DB {}", optionalUser.isPresent());
         return optionalUser.orElseThrow();
     }
@@ -58,15 +63,31 @@ public class DBUserService implements UserServable {
     @Override
     public User update(User user) {
         user = renameOnLogin(user);
-        Optional<User> optionalUser = userStorage.update(user);
+        Optional<User> optionalUser = userDBStorage.update(user);
         log.info("received data from DB {}", optionalUser.isPresent());
         return optionalUser.orElseThrow();
     }
 
     @Override
     public List<User> readAll() {
-        List<User> userList = userStorage.readAll();
+        List<User> userList = userDBStorage.readAll();
         log.info("received data from DB {}", userList.size());
         return userList;
+    }
+
+    @Override
+    public List<User> getMutualFriends(Long userId1, Long userId2) {
+        Set<User> friendsList1 = new HashSet<>(friendDBstorage.getAllFriends(userId1));
+        log.info("received data from DB for user {}", userId1);
+        Set<User> friendsList2 = new HashSet<>(friendDBstorage.getAllFriends(userId2));
+        log.info("received data from DB for user {}", userId1);
+        return friendsList1.stream().filter(friendsList2::contains).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<User> getAllFriends(Long id) {
+        List<User> friendList = friendDBstorage.getAllFriends(id);
+        log.info("received data from DB: {}", friendList.size());
+        return friendList;
     }
 }

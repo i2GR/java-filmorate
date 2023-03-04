@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.entity.Film;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,4 +38,13 @@ public interface GenreStorable {
      * @return список жанров
      */
     List<Genre> readByFilmId(Long filmId);
+
+    /**
+     * получение таблицы с данными о всех жанрах фильмов
+     * реализация в виде Map
+     * @return реализация в виде Map
+     * ключ - идентификатор фильма
+     * значение по ключу - списко жанров, указанных в БД для фильма с заданым идентификатором
+     */
+    Map<Long, List<Genre>> getFilmGenresCommon();
 }

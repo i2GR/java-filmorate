@@ -26,28 +26,28 @@ public class DBFilmService implements FilmServable {
 
     @NonNull
     @Qualifier("filmDBStorage")
-    private final FilmStorage filmStorage;
+    private final FilmStorage filmDBStorage;
 
     @NonNull
-    private final GenreServable genreService;
+    private final GenreServable genreDBService;
 
     /**
      * перегружен для проверки наличия идентификатора
      */
     @Override
     public Film create(@NonNull Film film) {
-        Optional<Film> optionalFilm = filmStorage.create(film);
+        Optional<Film> optionalFilm = filmDBStorage.create(film);
         log.info("received response from DB {} when record:", optionalFilm.isPresent());
-        int affectedRows = genreService.updateGenreForFilm(film);
+        int affectedRows = genreDBService.updateGenreForFilm(film);
         log.info("film-Genres recorded to DB: {}", affectedRows);
         return optionalFilm.orElseThrow();
     }
 
     @Override
     public Film readById(@NonNull Long entityId) {
-        List<Genre> genres = genreService.getGenresForFilmById(entityId);
+        List<Genre> genres = genreDBService.getGenresForFilmById(entityId);
         log.info("received film-genres-data from DB {}", genres.size());
-        Optional<Film> optionalFilm = filmStorage.readById(entityId);
+        Optional<Film> optionalFilm = filmDBStorage.readById(entityId);
         log.info("received film-data from DB {}", optionalFilm.isPresent());
         Film film = optionalFilm.orElseThrow();
         film.setGenres(genres);
@@ -57,10 +57,10 @@ public class DBFilmService implements FilmServable {
 
     @Override
     public Film update(Film film) {
-        genreService.updateGenreForFilm(film);
-        Optional<Film> optionalFilm = filmStorage.update(film);
+        genreDBService.updateGenreForFilm(film);
+        Optional<Film> optionalFilm = filmDBStorage.update(film);
         log.info("received genres data from DB for filmId {}, {}", film.getId(), optionalFilm.isPresent());
-        List<Genre> genres = genreService.getGenresForFilmById(film.getId());
+        List<Genre> genres = genreDBService.getGenresForFilmById(film.getId());
         log.info("received film-genres-data from DB {}", genres.size());
         Film returnedFilm = optionalFilm.orElseThrow();
         returnedFilm.setGenres(genres);
@@ -70,11 +70,11 @@ public class DBFilmService implements FilmServable {
 
     @Override
     public List<Film> readAll() {
-        List<Film> filmList = filmStorage.readAll();
-        log.info("received films data from DB {}", filmList.size());
-        for (Film film : filmList) {
-            film.setGenres(genreService.getGenresForFilmById(film.getId()));
-        }
-        return filmList;
+        List<Film> films = filmDBStorage.readAll();
+        log.info("received films data from DB {}", films.size());
+        Map<Long, List<Genre>> filmIdToGenresList = genreDBService.getFilmGenresCommon();
+        log.info("received common genres data from DB {}", filmIdToGenresList.size());
+        films.forEach(film -> film.setGenres(filmIdToGenresList.getOrDefault(film.getId(), new ArrayList<>())));
+        return films;
     }
 }

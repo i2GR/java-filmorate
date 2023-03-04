@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.BasicModelHandling;
 import ru.yandex.practicum.filmorate.model.entity.User;
 import ru.yandex.practicum.filmorate.service.user.InMemoryUserService;
 import ru.yandex.practicum.filmorate.service.user.UserServable;
@@ -26,7 +25,6 @@ class UserControllerTest extends ControllerTest<User>{
 
     @BeforeEach
     void setup() {
-        //TestUserBuilder builder = new TestUserBuilder();
         user = User.builder()
                     .id(1L)
                     .name("name")

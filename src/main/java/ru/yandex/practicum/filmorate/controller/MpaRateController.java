@@ -48,5 +48,4 @@ public class MpaRateController {
         log.info("get genre request with id {}", id);
         return mpaRateService.getMpaRateById(id);
     }
-
 }
