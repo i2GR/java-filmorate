@@ -1,10 +1,10 @@
 INSERT INTO genres (id, name)
-VALUES (1, 'Comedy'),
-        (2, 'Drama'),
-        (3, 'Animation'),
-        (4, 'Thriller'),
-        (5, 'Documentary'),
-        (6, 'Action');
+VALUES (1, 'Комедия'),
+        (2, 'Драма'),
+        (3, 'Мультфильм'),
+        (4, 'Триллер'),
+        (5, 'Документальный'),
+        (6, 'Боевик');
 
 INSERT INTO rating_MPA (id, mpa)
 VALUES (1, 'G'),
@@ -12,4 +12,3 @@ VALUES (1, 'G'),
         (3, 'PG-13'),
         (4, 'R'),
         (5, 'NC-17');
-

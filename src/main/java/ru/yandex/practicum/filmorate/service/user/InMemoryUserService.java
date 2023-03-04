@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.activity.FriendPair;
 import ru.yandex.practicum.filmorate.model.entity.User;
 import ru.yandex.practicum.filmorate.service.IdServable;
-import ru.yandex.practicum.filmorate.service.IdService;
+import ru.yandex.practicum.filmorate.service.InMemoryIdService;
 import ru.yandex.practicum.filmorate.service.friend.FriendServable;
 import ru.yandex.practicum.filmorate.storage.activity.friends.InMemoryFriendPairsStorage;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
@@ -40,7 +39,7 @@ public class InMemoryUserService implements UserServable, FriendServable {
     /**
      * сервис-слой обновлению идентификатора
      */
-    private final IdServable<User> idService = new IdService<>(0L);
+    private final IdServable<User> idService = new InMemoryIdService<>(0L);
 
     /**
      * реализация с проверкой наличия идентификатора
@@ -115,7 +114,7 @@ public class InMemoryUserService implements UserServable, FriendServable {
         return friendPairsStorage.getFriendsById(id)
                 .stream()
                 .map(userStorage::readById)
-                .map(Optional::get)
+                .map(Optional::orElseThrow)
                 .collect(Collectors.toList());
     }
 }

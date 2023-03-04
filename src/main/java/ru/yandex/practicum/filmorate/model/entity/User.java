@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.model.entity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.yandex.practicum.filmorate.model.Identable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -17,7 +16,7 @@ import java.time.LocalDate;
  */
 @Data
 @Builder
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class User extends Entity {
 
     private Long id;

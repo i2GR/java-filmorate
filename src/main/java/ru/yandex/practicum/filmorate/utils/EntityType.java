@@ -14,5 +14,4 @@ public enum EntityType {
         value = str.toLowerCase().replace((char) (str.charAt(0) + 32), str.charAt(0));
     }
     public String val() {return value;}
-
 }

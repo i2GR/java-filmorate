@@ -16,7 +16,6 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
-
 /**
  * реализация функционала репозитория базы данных пользователей
  * ТЗ-11
@@ -29,35 +28,35 @@ public class DBUserStorage implements UserStorage {
 
     @Override
     public Optional<User> create(User user) {
-        String sqlQuery = "INSERT INTO users (email, login, name, birthday) VALUES (?, ?, ?, ?)";
+        String sqlQuery = "INSERT INTO users (email, login, name, birthday) VALUES (?, ?, ?, ?);";
         return insertUserToDB(sqlQuery, user);
     }
 
 
     @Override
     public Optional<User> readById(Long entityId) {
-        String sqlQuery = "SELECT * FROM users WHERE id = ?";
+        String sqlQuery = "SELECT * FROM users WHERE id = ?;";
         return readUserFromDB(sqlQuery, entityId);
     }
 
     @Override
     public Optional<User> update(User entity) {
         String sqlQuery = "UPDATE users SET "
-                          + "email = ?, login = ? , name = ?, birthday = ? "
-                          + "WHERE id = ?";
+                + "email = ?, login = ? , name = ?, birthday = ? "
+                + "WHERE id = ?";
         return updateUserInDB(sqlQuery, entity);
     }
 
     @Override
     public List<User> readAll() {
-        String sqlQuery = "SELECT * FROM users";
+        String sqlQuery = "SELECT * FROM users;";
         return readAllUsersFromDB(sqlQuery);
     }
 
 
     @Override
     public boolean delete(Long id) {
-        String sqlQuery = "DELETE FROM users WHERE id = ?";
+        String sqlQuery = "DELETE FROM users WHERE id = ?;";
         return deleteUserFromDB(sqlQuery, id);
     }
 
@@ -84,14 +83,14 @@ public class DBUserStorage implements UserStorage {
         return Optional.empty();
     }
 
-    private Optional<User> updateUserInDB(String sqlQuery, User user){
+    private Optional<User> updateUserInDB(String sqlQuery, User user) {
         try {
-            int affectedRows = jdbcTemplate.update( sqlQuery
-                                                    , user.getEmail()
-                                                    , user.getLogin()
-                                                    , user.getName()
-                                                    , user.getBirthday()
-                                                    , user.getId());
+            int affectedRows = jdbcTemplate.update(sqlQuery
+                    , user.getEmail()
+                    , user.getLogin()
+                    , user.getName()
+                    , user.getBirthday()
+                    , user.getId());
             if (affectedRows == 1) {
                 return Optional.of(user);
             }
@@ -101,7 +100,7 @@ public class DBUserStorage implements UserStorage {
         }
     }
 
-    private Optional<User> readUserFromDB (String sqlQuery, Long id) {
+    private Optional<User> readUserFromDB(String sqlQuery, Long id) {
         try {
             User user = jdbcTemplate.queryForObject(sqlQuery, new UserRowMapper(), id);
             return Optional.ofNullable(user);
@@ -115,7 +114,7 @@ public class DBUserStorage implements UserStorage {
     }
 
     private boolean deleteUserFromDB(String sqlQuery, Long id) {
-        try{
+        try {
             return jdbcTemplate.update(sqlQuery, id) == 1;
         } catch (DataAccessException dae) {
             return false;

@@ -12,7 +12,5 @@ public class FriendPairRowMapper implements RowMapper<FriendPair> {
     public FriendPair mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new FriendPair(resultSet.getLong("owner_id")
                               , resultSet.getLong("friend_id"));
-        //, resultSet.getLong("initiated_by")
-        //, resultSet.getBoolean("confirmed"));
     }
 }

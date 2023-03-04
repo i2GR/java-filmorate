@@ -30,7 +30,7 @@ public class DBLikeStorage implements LikeStorable {
     @Override
     public Optional<Like> create(Like like) {
         String sqlQuery = "INSERT INTO user_liked_film (user_id, film_id) "
-                            + "VALUES (?, ?);";
+                + "VALUES (?, ?);";
         return updateLikeInDB(sqlQuery, like);
     }
 
@@ -46,29 +46,32 @@ public class DBLikeStorage implements LikeStorable {
 
     public Set<Long> getUsersForFilmById(Long filmId) {
         String sqlQuery = "SELECT user_id "
-                          + "FROM  user_liked_film"
-                          + "WHERE film_id = ?;";
+                + "FROM  user_liked_film "
+                + "WHERE film_id = ?;";
         return new HashSet<>(
                 jdbcTemplate.query(sqlQuery
-                , (rs, rowNum) -> rs.getLong("user_id")
-                , filmId)
-                );
+                        , (rs, rowNum) -> rs.getLong("user_id")
+                        , filmId)
+        );
     }
 
     public List<Film> getTopFilms(Integer count) {
-        String sqlQuery = "SELECT f.* "
-                + "FROM  user_liked_film AS l "
-                + "LEFT OUTER JOIN films AS f ON f.id = l.film_id "
-                + "GROUP BY f.film_id "
-                + "ORDER BY COUNT(l.user_id) DESC "
+        String sqlQuery = "SELECT * "
+                + "FROM films "
+                + "LEFT OUTER JOIN "
+                + "(SELECT film_id, COUNT(user_id) AS like_count "
+                + "FROM user_liked_film "
+                + "GROUP BY film_id) AS likes "
+                + "ON likes.film_id = films.id "
+                + "LEFT OUTER JOIN rating_MPA ON films.mpa_id = rating_MPA.id "
+                + "ORDER BY likes.like_count DESC "
                 + "LIMIT ?;";
-        List<Film> films = jdbcTemplate.query(sqlQuery, new FilmRowMapper(), count);
-        return films;
+        return jdbcTemplate.query(sqlQuery, new FilmRowMapper(), count);
     }
 
     private Optional<Like> updateLikeInDB(String sqlQuery, Like like) {
         try {
-            int affectedRows = jdbcTemplate.update( sqlQuery, like.getUserId(), like.getFilmId());
+            int affectedRows = jdbcTemplate.update(sqlQuery, like.getUserId(), like.getFilmId());
             if (affectedRows == 1) {
                 return Optional.of(like);
             }
@@ -78,7 +81,7 @@ public class DBLikeStorage implements LikeStorable {
         }
     }
 
-    private Optional<Like> readLikeFromDB (String sqlQuery, Like like) {
+    private Optional<Like> readLikeFromDB(String sqlQuery, Like like) {
         try {
             Like likeInDB = jdbcTemplate.queryForObject(sqlQuery, new LikeRowMapper(), like.getUserId(), like.getFilmId());
             return Optional.ofNullable(likeInDB);

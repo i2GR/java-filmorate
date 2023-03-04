@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmorate.model.entity;
 
 import lombok.*;
-import ru.yandex.practicum.filmorate.model.FilmMPARating;
+import ru.yandex.practicum.filmorate.model.FilmMpaRating;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.validation.AfterCinemaInvention;
 import ru.yandex.practicum.filmorate.utils.Constants;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class Film extends Entity {
 
     private Long id;
@@ -40,6 +41,7 @@ public class Film extends Entity {
 
     /**
      * по результатам мозгового штурма: рейтинг фильма на основе лайков
+     *
      * @implNote ???<p>необходимая реализация неизвестна: количество ли лайков или место ли в рейтинге на его основе<p>???
      * <p>ТЗ-11
      */
@@ -47,7 +49,7 @@ public class Film extends Entity {
     private Integer rate = 0;
 
     @Builder.Default
-    private List<String> genres = new ArrayList<>();
+    private List<Genre> genres = new ArrayList<>();
 
-    private FilmMPARating mpa;
+    private FilmMpaRating mpa;
 }

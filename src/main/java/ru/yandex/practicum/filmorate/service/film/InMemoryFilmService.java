@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.model.activity.Like;
 import ru.yandex.practicum.filmorate.model.entity.Film;
 
 import ru.yandex.practicum.filmorate.service.IdServable;
-import ru.yandex.practicum.filmorate.service.IdService;
+import ru.yandex.practicum.filmorate.service.InMemoryIdService;
 import ru.yandex.practicum.filmorate.service.like.LikeServable;
 import ru.yandex.practicum.filmorate.storage.activity.likes.LikeStorable;
 import ru.yandex.practicum.filmorate.storage.entity.film.FilmStorage;
@@ -44,13 +44,13 @@ public class InMemoryFilmService implements FilmServable, LikeServable {
     /**
      * сервис-слой обновлению идентификатора
      */
-    private final IdServable<Film> idService = new IdService<>(0L);
+    private final IdServable<Film> idService = new InMemoryIdService<>(0L);
 
     /**
      * перегружен для проверки наличия идентификатора
      */
     @Override
-    public Film create (@NonNull Film film) {
+    public Film create(@NonNull Film film) {
         film = idService.getEntityWithCheckedId(film);
         Optional<Film> optionalFilm = filmStorage.create(film);
         log.info("received data from InMemory {}", optionalFilm.isPresent());
@@ -58,7 +58,7 @@ public class InMemoryFilmService implements FilmServable, LikeServable {
     }
 
     @Override
-    public Film readById(@NonNull Long entityId){
+    public Film readById(@NonNull Long entityId) {
         Optional<Film> optionalFilm = filmStorage.readById(entityId);
         log.info("received data from InMemory {}", optionalFilm.isPresent());
         return optionalFilm.orElseThrow();

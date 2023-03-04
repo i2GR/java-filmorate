@@ -6,15 +6,15 @@ import ru.yandex.practicum.filmorate.utils.TestFilmBuilder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class IdServiceTest {
+class InMemoryIdServiceTest {
 
-    IdService<Film> idFilmService;
+    InMemoryIdService<Film> idFilmService;
 
     private final Long lastID = 1L;
 
     @Test
     void testServiceOnFilmWithId() {
-        idFilmService= new IdService<>(lastID);
+        idFilmService= new InMemoryIdService<>(lastID);
         Film expected = new TestFilmBuilder()
                 .defaultFilm()
                 .setId(2131L)
@@ -27,7 +27,7 @@ class IdServiceTest {
 
     @Test
     void testServiceOnFilmNullId() {
-        idFilmService= new IdService<>(lastID);
+        idFilmService= new InMemoryIdService<>(lastID);
         Film expected = new TestFilmBuilder()
                 .defaultFilm()
                 .setId(null)
