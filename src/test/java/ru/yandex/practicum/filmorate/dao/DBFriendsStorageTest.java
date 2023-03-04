@@ -72,21 +72,6 @@ class DBFriendsStorageTest {
     }
 
     @Test
-    void getMutualFriends() {
-        Long id3 = userStorage.create(user3).orElseThrow().getId();
-        Optional<FriendPair> addedFriends = friendStorage.create(id3, 2L);
-        User user2db = userStorage.readById(2L).orElseThrow();
-        List<User> mutual13 = friendStorage.getMutualFriends(1L, id3);
-        List<User> mutual12 = friendStorage.getMutualFriends(1L, 2L);
-        List<User> mutual32 = friendStorage.getMutualFriends(id3, 2L);
-
-        assertEquals(1, mutual13.size());
-        assertEquals(user2db, mutual13.get(0));
-        assertEquals(0, mutual12.size());
-        assertEquals(0, mutual32.size());
-    }
-
-    @Test
     void getAllFriends() {
         Long id3 = userStorage.create(user3).orElseThrow().getId();
         User user2db = userStorage.readById(2L).orElseThrow();

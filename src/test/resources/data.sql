@@ -4,7 +4,6 @@ DELETE FROM friends;
 DELETE FROM user_liked_film;
 DELETE FROM film_genres;
 
-
 INSERT INTO genres (id, name)
 VALUES (1, 'Комедия'),
         (2, 'Драма'),

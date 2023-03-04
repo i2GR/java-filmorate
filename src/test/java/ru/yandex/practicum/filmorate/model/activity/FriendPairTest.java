@@ -93,12 +93,11 @@ class FriendPairTest {
         Optional<Long> result4 = friendPair2.getPairedId(4L);
         Optional<Long> result5 = friendPair1.getPairedId(0L);
 
-        assertEquals(result1.get(), pair1ID2);
-        assertEquals(result2.get(), pair1ID1);
-        assertEquals(result3.get(), pair2ID2);
-        assertEquals(result4.get(), pair2ID1);
+        assertEquals(result1.orElseThrow(), pair1ID2);
+        assertEquals(result2.orElseThrow(), pair1ID1);
+        assertEquals(result3.orElseThrow(), pair2ID2);
+        assertEquals(result4.orElseThrow(), pair2ID1);
         assertTrue(result5.isEmpty());
-
     }
 
     private void setupPairs() {

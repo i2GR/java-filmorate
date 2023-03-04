@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.service.friend;
 
 import ru.yandex.practicum.filmorate.model.activity.FriendPair;
-import ru.yandex.practicum.filmorate.model.entity.User;
-
-import java.util.List;
 
 /**
  * интерфейс для сервис-слоя базового CRUD-функционала для статуса друзей
@@ -29,19 +26,4 @@ public interface FriendServable {
      * @return DTO-класс с полями -  идентификаторами пользователей
      */
     FriendPair breakFriends(Long ownerId, Long friendId);
-
-    /**
-     * получение списка общих друзей для двух пользователей
-     * @param userId1 идентификатор пользователя 1 (условный)
-     * @param userId2 идентификатор пользователя 2 (условный)
-     * @return список
-     */
-    List<User> getMutualFriends(Long userId1, Long userId2);
-
-    /**
-     * получение списка друзей для заданного пользователей
-     * @param id идентификатор заданного пользователя
-     * @return список друзей
-     */
-    List<User> getAllFriends(Long id);
 }

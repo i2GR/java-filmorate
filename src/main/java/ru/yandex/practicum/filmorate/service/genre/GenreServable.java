@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.entity.Film;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * интерфейс для сервис-слоя функционала жанров
@@ -41,4 +42,13 @@ public interface GenreServable {
      * @return список жанров фильма
      */
     List<Genre> getGenresForFilmById(Long filmId);
+
+    /**
+     * получение таблицы с данными о всех жанрах фильмов
+     * реализация в виде Map
+     * @return реализация в виде Map
+     * ключ - идентификатор фильма
+     * значение по ключу - списко жанров, указанных в БД для фильма с заданым идентификатором
+     */
+    Map<Long, List<Genre>> getFilmGenresCommon();
 }

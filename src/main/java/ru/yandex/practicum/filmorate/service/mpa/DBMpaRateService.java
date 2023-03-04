@@ -25,18 +25,18 @@ public class DBMpaRateService implements MpaRateServable {
      * хранилище в БД
      */
     @NonNull
-    private final MpaRateStorable mpaRateStorage;
+    private final MpaRateStorable mpaRateDBStorage;
 
     @Override
     public List<FilmMpaRating> getAll() {
-        List<FilmMpaRating> mpaRateList = mpaRateStorage.readAll();
+        List<FilmMpaRating> mpaRateList = mpaRateDBStorage.readAll();
         log.info("received data from DB {}",  mpaRateList.size());
         return  mpaRateList;
     }
 
     @Override
     public FilmMpaRating getMpaRateById(@NonNull Integer id){
-        Optional<FilmMpaRating> optionalMpaRate = mpaRateStorage.readMpaRateById(id);
+        Optional<FilmMpaRating> optionalMpaRate = mpaRateDBStorage.readMpaRateById(id);
         log.info("received data from DB {}", optionalMpaRate.isPresent());
         return optionalMpaRate.orElseThrow();
     }

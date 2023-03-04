@@ -46,5 +46,4 @@ public class GenreController {
         log.info("get genre request with id {}", id);
         return genreService.getGenreById(id);
     }
-
 }

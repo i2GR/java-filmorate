@@ -30,12 +30,12 @@ public class DBLikeService implements LikeServable{
      */
     @NonNull
     @Autowired
-    private DBLikeStorage storage;
+    private DBLikeStorage likeDBstorage;
 
     @Override
     public Like like(Long userId, Long filmId){
         Like like = new Like(userId, filmId);
-        Optional<Like> optionalLike = storage.create(like);
+        Optional<Like> optionalLike = likeDBstorage.create(like);
         log.info("received response from DB {} when record:", optionalLike.isPresent());
         return optionalLike.orElseThrow();
     }
@@ -43,14 +43,14 @@ public class DBLikeService implements LikeServable{
     @Override
     public Like dislike(Long userId, Long filmId){
         Like like = new Like(userId, filmId);
-        Optional<Like> optionalLike = storage.delete(like);
+        Optional<Like> optionalLike = likeDBstorage.delete(like);
         log.info("received response from DB {} when delete:", optionalLike.isPresent());
         return optionalLike.orElseThrow();
     }
 
     @Override
     public List<Film> getTopLikedFilms(Integer count) {
-        List<Film> topFilmCount = storage.getTopFilms(count);
+        List<Film> topFilmCount = likeDBstorage.getTopFilms(count);
         log.info("received data from DB: {}", topFilmCount.size());
         return topFilmCount;
     }
