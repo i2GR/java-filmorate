@@ -12,6 +12,5 @@ public class LikeRowMapper implements RowMapper<Like> {
     public Like mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new Like(resultSet.getLong("user_id")
                         , resultSet.getLong("film_id"));
-
     }
 }

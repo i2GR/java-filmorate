@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage.activity.friends;
 import ru.yandex.practicum.filmorate.model.activity.FriendPair;
 
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * ТЗ-10<p>
@@ -20,13 +19,6 @@ public interface FriendsStorable {
     Optional<FriendPair> create(Long ownerId, Long friendId);
 
     /**
-     * проверка статуса друзей двух пользователей в хранилище
-     * @param friendPair искомый статус
-     * @return true, если статус найдено (пользователи являются друзьями), и false если события нет
-     */
-    //boolean read(FriendPair friendPair);
-
-    /**
      * удаление статуса друзей
      * @implNote метод подразумевает что статус должен быть удален по любому совпадению идентификаторов пользователя
      * @param ownerId идентификатор пользователя, для которого удаляется "друг"
@@ -34,5 +26,4 @@ public interface FriendsStorable {
      * @return экземпляр, удаленный и полученный из хранилища
      */
     Optional<FriendPair> delete(Long ownerId, Long friendId);
-
 }

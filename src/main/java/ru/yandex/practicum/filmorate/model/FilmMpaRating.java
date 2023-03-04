@@ -7,7 +7,7 @@ import lombok.*;
  */
 @Data
 @Builder
-public class FilmMPARating {
+public class FilmMpaRating {
     @NonNull
     private final Integer id;
 

@@ -21,20 +21,22 @@ public class CommonExceptionHandler {
 
     /**
      * метод перенаправления исключения валидации параметров передаваемых в ендпойнты
+     *
      * @param exception ValidationException
-     * в текущей реализации в исключение передается стандартное сообщение исключения
+     *                  в текущей реализации в исключение передается стандартное сообщение исключения
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid (MethodArgumentNotValidException exception) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
         log.warn("Invalid request body");
-        return new ResponseEntity<>(new ErrorResponse("error","Invalid request body")
+        return new ResponseEntity<>(new ErrorResponse("error", "Invalid request body")
                 , HttpStatus.BAD_REQUEST);
     }
 
     /**
      * обработчик исключения согласно ТЗ
+     *
      * @param exception исключение согласно ТЗ
      * @return унифицированное сообщение об ошибке
      */
@@ -79,6 +81,7 @@ public class CommonExceptionHandler {
     /**
      * обработка исключения с отправкой HTTP-кода 400 и объекта вызвавшего исключение
      * реализация для прохождения Postman-тестов
+     *
      * @param exception исключение
      */
     @ExceptionHandler(StorageDuplicateException.class)
@@ -92,6 +95,7 @@ public class CommonExceptionHandler {
     /**
      * обработка исключения с отправкой HTTP-кода 400 и объекта вызвавшего исключение
      * реализация для прохождения Postman-тестов
+     *
      * @param exception исключение
      */
     @ExceptionHandler(UserServiceException.class)
@@ -103,7 +107,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse  handleConstraintViolationException(ConstraintViolationException e) {
+    public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
         log.info("not valid path request to validation error");
         return new ErrorResponse("not valid path request to validation error", e.getMessage());
     }

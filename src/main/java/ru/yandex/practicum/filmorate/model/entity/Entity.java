@@ -1,7 +1,5 @@
 package ru.yandex.practicum.filmorate.model.entity;
 
-import lombok.Getter;
-import lombok.Setter;
 import ru.yandex.practicum.filmorate.model.Identable;
 
 /**

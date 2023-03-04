@@ -1,64 +1,51 @@
-## Промежуточное задание спринта 11 (11.1) -  Создание схемы БД
+## ФП СП-11 (11.1, 11.2)
 
 ### Схема БД
+
 https://app.quickdatabasediagrams.com/#/d/1rc7ry
-![filmorate_db2.png](/filmorate_db2.png)
+![filmorate_db3.png](/filmorate_db3.png)
 
-#### примечания к таблицам
+<details><summary><h3>примечания к таблицам</h3></summary>
+ФП-11 предполагает "одностороннюю" дружбу, поэтому для каждого пользователя должен быть уникальный список друзей
+(начальная ER-схема промедуточного задания 11.1 с только уникальными строками не выполняет такую функцию.
 
-<details><summary><h3>friends</h3></summary>
-вспомогательная таблица связи "многие ко многим"
-из реализации  спринта 10 пара <code>initiator - acceptor</code> должна быть уникальной  
-и без учета того, какой ID является <code>initiator</code>ом или <code>acceptor</code>-ом  
+SQL-запросы скорректированы по результатаи тестов и новыми данными ФП-11
+
+- исправлены ошибки, некоторая корректировка (оптимизация)
+- реализация для **H2database** без режимов совместимости с **PostgreSQL**
+
 </details>
 
-<details><summary><h3>rating_MPA</h3></summary>
-выделена отдельная таблица и выбрано использование суррогатного ключа, на (гипотетическую) возможность изменения кодов рейтинга   
-</details>
+
 
 ### Примеры SQL запросов
 
 <details><summary><h3>Добавление сущностей</h3></summary>
 
 * добавление пользователя
-
 ```SQL
-INSERT INTO users (email, login, name, birthday)  
-VALUES ('newuser1@mail.ru'
-        , 'login1'
-        , 'name1'
-        , CAST('yyyy-MM-dd' AS DATE)
-) RETURNING *;
+INSERT INTO users (email, login, name, birthday) VALUES (?, ?, ?, ?);
+
+-- передаваемые атрибуты (поля DTO класса User)
 ```
 
 * добавление фильма
-
 ```SQL
-INSERT INTO films (title, film_description, release, duration, rating_id)  
-VALUES ('title'  
-        , 'description'  
-        , CAST('yyyy-MM-dd' AS DATE)  
-        , [int]  
-        , (SELECT rating FROM public."FilmRatingMPA" WHERE description = 'value')  
-) RETURNING *;
+INSERT INTO films (title, description, release, duration, rate, mpa_id)
+VALUES (?, ?, ?, ?, ?, ?);
+
+-- передаваемые атрибуты (поля DTO класса Film)
 ```
+
 * добавление лайка
-
 ```SQL
-INSERT INTO user_like_to_film (user_id, film_id)  
-VALUES ('[bigint]'  -- user_id
-        , '[bigint]'  -- film_id  
-) RETURNING *;
+INSERT INTO user_liked_film (user_id, film_id)
+VALUES (?, ?);
 ```
-* добавление друзей
-  (неподтвержденный статус - запрос со стороны инициатора)
 
+* добавление друзей
 ```SQL
-INSERT INTO friends (user_id_initiator, user_id_acceptor, status)  
-VALUES ('[bigint]'  -- user_id_initiator
-        , '[bigint]'  -- user_id_acceptor 
-        , FALSE 
-) RETURNING *;
+INSERT INTO friends (owner_id, friend_id) VALUES (?, ?);  -- передаваемые атрибуты (поля DTO класса User)
 ```
 </details>
 
@@ -66,18 +53,28 @@ VALUES ('[bigint]'  -- user_id_initiator
 
 * получение пользователя
 ```SQL
-SELECT *  
-FROM users 
-WHERE user_id = ?; -- заданный идентификатор
+SELECT * FROM users WHERE id = ?; -- заданный идентификатор
 ```
 
 * получение фильма
 ```SQL
-SELECT *  
-FROM films 
-WHERE film_id = ?; -- заданный идентификатор
+SELECT *
+FROM films AS f
+INNER JOIN rating_MPA AS r ON f.mpa_id = r.id
+WHERE f.id = ?; -- заданный идентификатор
 ```
 
+* рейтинга MPA по идентификатору фильма
+```SQL
+SELECT r.*
+FROM rating_MPA AS r
+WHERE id IN (SELECT f.mpa_id FROM films AS f WHERE f.id = ?);
+```
+
+* рейтинга MPA по идентификатору (ФП-11.2)
+```SQL
+SELECT * FROM rating_MPA WHERE id = ?;
+```
 </details>
 
 <details><summary><h3>Проверка:</h3></summary>
@@ -92,51 +89,38 @@ WHERE user_initiator_id = ? -- заданный идентификатор
 
 * лайка (по идентификаторам пользователя и фильма)
 ```SQL
-EXISTS(
-SELECT *  
-FROM user_like_to_film
-WHERE film_id = ? -- заданный идентификатор
-      AND user_id = ? -- заданный идентификатор
-);
+SELECT * FROM user_liked_film WHERE user_id = ? AND film_id = ?;
 ```
 </details>
 
 <details><summary><h3>Обновление сущностей</h3></summary>
 
 * обновление пользователя
-
 ```SQL
 UPDATE users
-SET email = 'new email'
-    , login = 'new login'
-    , name = 'new name'
+SET email = ?
+    , login = ?
+    , name = ?
     , birthday = CAST('yyyy-MM-dd' AS DATE) -- обновленное значение для даты рождения
-WHERE user_id = ? -- заданный идентификатор
-RETURNING *;
+WHERE user_id = ?; -- заданный идентификатор
 ```
 
 * обновление фильма
 
 ```SQL
-UPDATE films
-SET title = 'new title'
-    , film_description  = 'film_description'
-    , release = CAST('yyyy-MM-dd' AS DATE) -- обновленное значение для даты релиза
-    , duration = <value>
-    , rating_id = <value>
-WHERE film_id = ? -- заданный идентификатор
-RETURNING *;
+UPDATE films SET 
+title = ?, description = ? , release = ?, duration = ?, rate = ?, mpa_id = ? 
+WHERE id = ?;
+-- параметры передаются в REST-запросе
+-- список жанров обновляется отдельно
 ```
 
-* подтверждение друзей
-  (подтверждение со стороны акцептора)
+* обновление списка жанров для фильма (часть обработки обновления фильма)
 
 ```SQL
-UPDATE friends 
-SET status = TRUE
-WHERE user_id_initiator = ? -- initiator id
-      AND user_id_acceptor = ? -- acceptor_id 
-RETURNING status;
+DELETE FROM film_genres WHERE film_id = ?; -- очистка старых данных по идентификатору фильма
+INSERT INTO film_genres (film_id, genre_id)
+VALUES (?,?);
 ```
 
 </details>
@@ -144,63 +128,96 @@ RETURNING status;
 <details><summary><h3>Получение списков</h3></summary>
 
 * всех пользователей
+
 ```SQL
 SELECT *
 FROM users;
 ```
 
 * всех фильмов
+
 ```SQL
-SELECT *
-FROM films;
+"SELECT f.*, r.mpa FROM films AS f
+INNER JOIN rating_MPA AS r ON f.mpa_id = r.id;
+-- список жанров обновляется отдельно
 ```
 
 * топ-N фильмов с информацией о количестве лайков (N: переданное значение количества фильмов)
+
 ```SQL
-SELECT	f.* 
-		, COUNT(l.user_id)
-FROM user_like_to_film" AS l 
-LEFT OUTER JOIN films AS f ON f.film_id = l.film_id
-GROUP BY f.film_id  
-ORDER BY COUNT(l.user_id) DESC
-LIMIT <N>
+SELECT * 
+FROM films 
+LEFT OUTER JOIN (SELECT film_id, COUNT(user_id) AS like_count
+                FROM user_liked_film
+                GROUP BY film_id) AS likes
+                ON likes.film_id = films.id
+                LEFT OUTER JOIN rating_MPA ON films.mpa_id = rating_MPA.id
+                ORDER BY likes.like_count DESC
+                LIMIT ?; -- количество фильмов передается в REST-запросе
 ```
+
 * жанров фильма (по идентификатору)
 ```SQL
-SELECT 
-g.category
-FROM film_genre AS fg
-LEFT JOIN films AS f ON f.film_id = fg.film_id
-LEFT JOIN genres AS g ON fg.genre_id = g.genre_id
-WHERE f.film_id = <id> 
+SELECT * 
+FROM genres 
+WHERE id IN (SELECT genre_id 
+            FROM film_genres 
+            WHERE film_id = ?);
 ```
+
 * друзей пользователя (по идентификатору пользователя)
+
 ```SQL
-SELECT * AS  
-FROM friends AS f1  
-WHERE f1.user_id_initiator = ? -- заданный идентификатор 
-UNION  
-SELECT *  
-FROM friends AS f2  
-WHERE f2.user_id_acceptor = ? -- заданный идентификатор  
+SELECT *
+FROM users
+WHERE id IN (SELECT friend_id 
+            FROM friends
+            WHERE owner_id = ?);
 ```
+
 * общих друзей
-
 ```SQL
-SELECT CASE
-WHEN (initiator = <id1> AND acceptor != <id2>) THEN acceptor
-WHEN (initiator != <id2> AND acceptor = <id1>) THEN initiator
-END AS mutuals
-FROM friends
+SELECT * FROM users WHERE id IN (SELECT friend_id AS mutual 
+                                FROM friends 
+                                WHERE owner_id = ?    -- для пользователя **1**
+                                INTERSECT 
+                                SELECT friend_id 
+                                FROM friends 
+                                WHERE owner_id = ?);  -- для пользователя **2**
+```
 
-INTERSECT
+* жанров в ДБ (ФП-11.2)
+```SQL
+SELECT * FROM genres;
+```
 
-SELECT CASE
-WHEN (initiator = <id2> AND acceptor != <id1>) THEN acceptor
-WHEN (initiator != <id1> AND acceptor = <id2>) THEN initiator
-END
-FROM friends
+* рейтингов MPA в ДБ (ФП-11.2)
+```SQL
+SELECT * FROM rating_MPA;
 ```
 </details>
 
+<details><summary><h3>Удаление данных</h3></summary>
 
+* пользователя (по идентификатору)
+```SQL
+DELETE FROM users WHERE id = ?; -- переданный идентификатор
+```
+
+* фильма (по идентификатору)
+```SQL
+DELETE FROM films WHERE id = ?; -- переданный идентификатор
+```
+
+* удаление из друзей (односторонее)
+```SQL
+DELETE FROM friends WHERE owner_id = ? AND  friend_id = ?;
+```
+
+* удаление лайка
+```SQL
+DELETE
+FROM user_liked_film
+WHERE user_id = ? AND film_id = ?; -- идентификаторы пользователя и фильма из REST-запроса
+```
+</details>

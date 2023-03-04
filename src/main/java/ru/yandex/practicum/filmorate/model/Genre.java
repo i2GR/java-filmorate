@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @Builder
-public class FilmGenre {
+public class Genre {
     @NonNull
     private final Integer id;
     private final String name;

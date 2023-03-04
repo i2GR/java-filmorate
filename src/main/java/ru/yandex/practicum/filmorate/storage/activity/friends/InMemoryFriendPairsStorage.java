@@ -38,13 +38,6 @@ public class InMemoryFriendPairsStorage implements FriendsStorable {
                                             , friendPair.getFriendIdTwo().toString()));
     }
 
-/*    public boolean read(FriendPair friendPair) {
-        log.debug("reading friend status of {} and {}"
-                                            , friendPair.getFriendIdOne()
-                                            , friendPair.getFriendIdTwo());
-        return friendPairSet.contains(friendPair);
-    }*/
-
     @Override
     public Optional<FriendPair> delete(Long ownerId, Long friendId) {
         log.debug("deleting friends status of {} and {}"
