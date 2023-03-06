@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.exception;
+package ru.yandex.practicum.filmorate.exception.service;
 
 import lombok.Getter;
 import ru.yandex.practicum.filmorate.model.entity.User;

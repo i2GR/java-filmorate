@@ -6,10 +6,9 @@ import java.time.LocalDate;
 
 public class TestUserBuilder {
 
-    private final User user = User.builder()
-                              .build();
+    private final User user = new User();
 
-    public TestUserBuilder defaultUser() {
+    public TestUserBuilder defaultUser () {
         setId(1L);
         setName("name");
         setEmail("email@host.dom");

@@ -1,32 +1,30 @@
 package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.activity.Like;
 import ru.yandex.practicum.filmorate.model.entity.Film;
-
 import ru.yandex.practicum.filmorate.service.IdServable;
-import ru.yandex.practicum.filmorate.service.InMemoryIdService;
+import ru.yandex.practicum.filmorate.service.IdService;
 import ru.yandex.practicum.filmorate.service.like.LikeServable;
 import ru.yandex.practicum.filmorate.storage.activity.likes.LikeStorable;
 import ru.yandex.practicum.filmorate.storage.entity.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * реализация CRUD-функционала в сервис слое для фильмов
  * ТЗ-10
  */
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
-public class InMemoryFilmService implements FilmServable, LikeServable {
+public class FilmService implements FilmServable, LikeServable {
 
     @NonNull
     private final LikeStorable likeStorage;
@@ -38,37 +36,30 @@ public class InMemoryFilmService implements FilmServable, LikeServable {
     private final FilmStorage filmStorage;
 
     @NonNull
-    @Qualifier("userDBStorage")
     private final UserStorage userStorage;
 
     /**
      * сервис-слой обновлению идентификатора
      */
-    private final IdServable<Film> idService = new InMemoryIdService<>(0L);
+    private final IdServable<Film> idService = new IdService<>(0L);
 
     /**
      * перегружен для проверки наличия идентификатора
      */
     @Override
-    public Film create(@NonNull Film film) {
+    public Film create (@NonNull Film film) {
         film = idService.getEntityWithCheckedId(film);
-        Optional<Film> optionalFilm = filmStorage.create(film);
-        log.info("received data from InMemory {}", optionalFilm.isPresent());
-        return optionalFilm.orElseThrow();
+        return filmStorage.create(film);
     }
 
     @Override
-    public Film readById(@NonNull Long entityId) {
-        Optional<Film> optionalFilm = filmStorage.readById(entityId);
-        log.info("received data from InMemory {}", optionalFilm.isPresent());
-        return optionalFilm.orElseThrow();
+    public Film readById(@NonNull Long entityId){
+        return filmStorage.readById(entityId);
     }
 
     @Override
     public Film update(Film film) {
-        Optional<Film> optionalFilm = filmStorage.update(film);
-        log.info("updated data in InMemory {}", optionalFilm.isPresent());
-        return optionalFilm.orElseThrow();
+        return filmStorage.update(film);
     }
 
     @Override
@@ -84,7 +75,7 @@ public class InMemoryFilmService implements FilmServable, LikeServable {
     public Like like(@NonNull Long userId, @NonNull Long filmId) {
         userStorage.readById(userId);
         filmStorage.readById(filmId);
-        return likeStorage.create(new Like(userId, filmId)).orElseThrow();
+        return likeStorage.create(new Like(userId, filmId));
     }
 
     /**
@@ -95,7 +86,7 @@ public class InMemoryFilmService implements FilmServable, LikeServable {
     public Like dislike(@NonNull Long userId, @NonNull Long filmId) {
         userStorage.readById(userId);
         filmStorage.readById(filmId);
-        return likeStorage.delete(new Like(userId, filmId)).orElseThrow();
+        return likeStorage.delete(new Like(userId, filmId));
     }
 
     public List<Film> getTopLikedFilms(Integer count) {

@@ -1,10 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.activity.likes;
 
 import ru.yandex.practicum.filmorate.model.activity.Like;
-import ru.yandex.practicum.filmorate.model.entity.Film;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -18,7 +15,7 @@ public interface LikeStorable {
      * @param like экземпляр для сохранения лайка
      * @return сохраненный экземпляр
      */
-    Optional<Like> create(Like like);
+    Like create(Like like);
 
     /**
      * проверка наличия лайка в хранилище
@@ -33,7 +30,7 @@ public interface LikeStorable {
      * @param like искомый лайк
      * @return экземпляр, удаленный и полученный из хранилища
      */
-    Optional<Like> delete(Like like);
+    Like delete(Like like);
 
     /**
      * получение списка всех пользователей поставивших лайк фильму

@@ -6,9 +6,9 @@ import java.time.LocalDate;
 
 public class TestFilmBuilder {
 
-    private final Film film = Film.builder().build();
+    private final Film film = new Film();
 
-    public TestFilmBuilder defaultFilm() {
+    public TestFilmBuilder defaultFilm () {
         setId(1L);
         setName("title");
         setDescription("Description");

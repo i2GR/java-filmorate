@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.model.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,11 +14,8 @@ import java.time.LocalDate;
  * ТЗ-9
  */
 @Data
-@Builder
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper=false)
 public class User extends Entity {
-
-    private Long id;
     @Email
     private String email;
 

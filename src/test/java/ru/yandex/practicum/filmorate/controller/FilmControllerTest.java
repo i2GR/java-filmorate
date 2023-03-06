@@ -4,14 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.entity.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmServable;
-import ru.yandex.practicum.filmorate.service.film.InMemoryFilmService;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.storage.activity.likes.InMemoryLikesStorage;
 import ru.yandex.practicum.filmorate.storage.entity.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.entity.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.entity.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.utils.TestFilmBuilder;
-
-import java.time.LocalDate;
 
 class FilmControllerTest extends ControllerTest<Film>{
 
@@ -20,19 +18,14 @@ class FilmControllerTest extends ControllerTest<Film>{
     private FilmControllerTest() {
         super();
         storage = new InMemoryFilmStorage();
-        service = new InMemoryFilmService(new InMemoryLikesStorage(), (FilmStorage) storage, new InMemoryUserStorage());
+        service = new FilmService(new InMemoryLikesStorage(), (FilmStorage) storage, new InMemoryUserStorage());
         controller = new FilmController((FilmServable) service);
     }
 
     @BeforeEach
     void setup() {
-        film = Film.builder()
-                .id(1L)
-                .name("title")
-                .description("Description")
-                .releaseDate(LocalDate.EPOCH)
-                .duration(100)
-                .build();
+        TestFilmBuilder builder = new TestFilmBuilder();
+        film = builder.defaultFilm().build();
     }
 
     @Test

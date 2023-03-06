@@ -1,47 +1,19 @@
 package ru.yandex.practicum.filmorate.storage.entity;
 
+import ru.yandex.practicum.filmorate.BasicModelHandling;
 import ru.yandex.practicum.filmorate.model.entity.Entity;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * ТЗ-10 <p>
- * Интерфейс-шаблон для хранилища идентифицируемых объектов модели <p>
+ * Интерфейс-шаблон для хранилища идентифицируемых моделей <p>
  * Предусмаривается подход CRUD <p>
  * Подразумевается использование идентификатора <p>
  * @implNote <u>"идентифицируемая модель"</u> в описании методов это экземпляр класса-наследника {@link Entity} <p>
  * @param <T> указанный экземпляр класса, имеющий поле и сеттер/геттер идентификатора
  */
 
-public interface EntityStorable<T extends Entity> {
+public interface EntityStorable<T extends Entity> extends BasicModelHandling<T> {
 
-    /**
-     * Сохранение экземпляра объекта модели
-     * @param entity  экземпляр для сохранения
-     * @return сохраненный экземпляр
-     */
-    Optional<T> create(T entity);
-
-    /**
-     * Получение экземпляра объекта модели из хранилища по идентификатору
-     * @param entityId присвоенный идентификатор экземпляра объекта модели
-     * @return экземпляр объекта модели или пользователя, полученный по идентификатору
-     */
-    Optional<T> readById(Long entityId);
-
-    /**
-     * Модификация  экземпляра объекта модели в хранилище
-     * @param entity новый экземпляр объекта модели
-     * @return экземпляра объекта модели
-     */
-    Optional<T> update(T entity);
-
-    /**
-     * Получение списка всех фильмов или пользователей
-     * @return список
-     */
-    List<T> readAll();
     /**
      * ТЗ-10 <p>
      * Удаление экземпляра фильма или пользователя.
@@ -50,5 +22,5 @@ public interface EntityStorable<T extends Entity> {
      * @param id идентификатор экземпляра entity для удаления
      * @return экземпляр, удаленный и полученный из хранилища
      */
-    boolean delete(Long id);
+    T delete(Long id);
 }
