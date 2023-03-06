@@ -2,19 +2,19 @@ package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.service.UserServiceException;
 import ru.yandex.practicum.filmorate.model.activity.FriendPair;
 import ru.yandex.practicum.filmorate.model.entity.User;
 import ru.yandex.practicum.filmorate.service.IdServable;
-import ru.yandex.practicum.filmorate.service.IdService;
+import ru.yandex.practicum.filmorate.service.InMemoryIdService;
 import ru.yandex.practicum.filmorate.service.friend.FriendServable;
-import ru.yandex.practicum.filmorate.storage.activity.friends.FriendsStorable;
+import ru.yandex.practicum.filmorate.storage.activity.friends.InMemoryFriendPairsStorage;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
  * ТЗ-10
  */
 @Slf4j
-@Service
 @RequiredArgsConstructor
-public class UserService implements UserServable, FriendServable {
+public class InMemoryUserService implements UserServable, FriendServable {
 
     @NonNull
-    private final FriendsStorable friendPairsStorage;
+    @Autowired
+    private final InMemoryFriendPairsStorage friendPairsStorage;
 
     /**
      * хранилище пользователей
@@ -39,7 +39,7 @@ public class UserService implements UserServable, FriendServable {
     /**
      * сервис-слой обновлению идентификатора
      */
-    private final IdServable<User> idService = new IdService<>(0L);
+    private final IdServable<User> idService = new InMemoryIdService<>(0L);
 
     /**
      * реализация с проверкой наличия идентификатора
@@ -49,12 +49,16 @@ public class UserService implements UserServable, FriendServable {
     public User create(User user) {
         user = idService.getEntityWithCheckedId(user);
         user = renameOnLogin(user);
-        return userStorage.create(user);
+        Optional<User> optionalUser = userStorage.create(user);
+        log.info("received data from InMemory {}", optionalUser.isPresent());
+        return optionalUser.orElseThrow();
     }
 
     @Override
     public User readById(@NonNull Long entityId){
-        return userStorage.readById(entityId);
+        Optional<User> optionalUser = userStorage.readById(entityId);
+        log.info("received data from InMemory {}", optionalUser.isPresent());
+        return optionalUser.orElseThrow();
     }
 
     /**
@@ -63,12 +67,16 @@ public class UserService implements UserServable, FriendServable {
     @Override
     public User update(User user) {
         user = renameOnLogin(user);
-        return userStorage.update(user);
+        Optional<User> optionalUser = userStorage.update(user);
+        log.info("updated data InMemory {}", optionalUser.isPresent());
+        return optionalUser.orElseThrow();
     }
 
     @Override
     public List<User> readAll() {
-        return userStorage.readAll();
+        List<User> userList= userStorage.readAll();
+        log.info("received data from InMemory {}", !userList.isEmpty());
+        return userList;
     }
 
     /**
@@ -76,20 +84,19 @@ public class UserService implements UserServable, FriendServable {
      * при отсутствии фильма или пользователя будет выброшено исключение
      */
     @Override
-    public FriendPair joinUpFriends(@Valid Long userId1, @Valid Long userId2) {
-        userStorage.readById(userId1);
-        userStorage.readById(userId2);
-        return friendPairsStorage.create(new FriendPair(userId1, userId2));
+    public FriendPair joinUpFriends(@Valid Long initiatorId, @Valid Long friendId) {
+        userStorage.readById(initiatorId);
+        userStorage.readById(friendId);
+        Optional<FriendPair> friendPairOptional = friendPairsStorage.create(initiatorId, friendId);
+        log.info("received data from InMemory {}", friendPairOptional.isPresent());
+        return friendPairOptional.orElseThrow();
     }
 
     @Override
-    public boolean areFriends(@Valid Long userId1, @Valid Long userId2) {
-        return friendPairsStorage.read(new FriendPair(userId1, userId2));
-    }
-
-    @Override
-    public FriendPair breakFriends(@Valid Long userId1, @Valid Long userId2) {
-        return friendPairsStorage.delete(new FriendPair(userId1, userId2));
+    public FriendPair breakFriends(@Valid Long ownerId, @Valid Long friendId) {
+        Optional<FriendPair> friendPairOptional = friendPairsStorage.delete(ownerId, friendId);
+        log.info("received data from InMemory {}", friendPairOptional.isPresent());
+        return friendPairOptional.orElseThrow();
     }
 
     @Override
@@ -107,25 +114,7 @@ public class UserService implements UserServable, FriendServable {
         return friendPairsStorage.getFriendsById(id)
                 .stream()
                 .map(userStorage::readById)
+                .map(Optional::orElseThrow)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * метод для подстановки логина пользователя в качестве имени при незаполненном поле Name
-     * @param user экз. User из запроса
-     * @return экз. User с заполенным полем Name
-     * @throws UserServiceException в случае любой ошибки в экземпляре User
-     */
-    private User renameOnLogin(User user) throws UserServiceException {
-        try {
-            String userName = user.getName();
-            if (userName == null || userName.isBlank()) {
-                user.setName(user.getLogin());
-                log.info("User.name received is empty. User renamed based on Login");
-            }
-        } catch (RuntimeException t) {
-            throw new UserServiceException("Non correct User object received:incorrect User login", user);
-        }
-        return user;
     }
 }

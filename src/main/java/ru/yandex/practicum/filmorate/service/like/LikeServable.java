@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.model.entity.Film;
 import java.util.List;
 
 /**
- * интерфейс для сервис-слоя базового CRUD-функционала для статуса друзей
+ * интерфейс для сервис-слоя базового CRUD-функционала для лайков
  * ТЗ-10
  */
 public interface LikeServable {

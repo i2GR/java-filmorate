@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model.entity;
+package ru.yandex.practicum.filmorate.model;
 
 /** интерфейс получения сущностей по идентификатору
  * ТЗ-9

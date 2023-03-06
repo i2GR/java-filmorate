@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.exception.validation;
+package ru.yandex.practicum.filmorate.exception;
 
 /**
  * исключение при операциях валидации аргументов методов на ендпойнтах
