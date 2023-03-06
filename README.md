@@ -68,7 +68,8 @@ WHERE f.id = ?; -- заданный идентификатор
 ```SQL
 SELECT r.*
 FROM rating_MPA AS r
-WHERE id IN (SELECT f.mpa_id FROM films AS f WHERE f.id = ?);
+INNER JOIN films AS f ON f.mpa_id = r.id 
+WHERE f.id = ?;
 ```
 
 * рейтинга MPA по идентификатору (ФП-11.2)
@@ -78,14 +79,6 @@ SELECT * FROM rating_MPA WHERE id = ?;
 </details>
 
 <details><summary><h3>Проверка:</h3></summary>
-
-* статуса дружбы (по идентификаторам пользователя-инициатора и пользователя-акцептора)
-```SQL
-SELECT status  
-FROM friends 
-WHERE user_initiator_id = ? -- заданный идентификатор
-      AND user_acceptor_id = ?; -- заданный идентификатор
-```
 
 * лайка (по идентификаторам пользователя и фильма)
 ```SQL
@@ -145,45 +138,31 @@ INNER JOIN rating_MPA AS r ON f.mpa_id = r.id;
 * топ-N фильмов с информацией о количестве лайков (N: переданное значение количества фильмов)
 
 ```SQL
-SELECT * 
-FROM films 
-LEFT OUTER JOIN (SELECT film_id, COUNT(user_id) AS like_count
-                FROM user_liked_film
-                GROUP BY film_id) AS likes
-                ON likes.film_id = films.id
-                LEFT OUTER JOIN rating_MPA ON films.mpa_id = rating_MPA.id
-                ORDER BY likes.like_count DESC
-                LIMIT ?; -- количество фильмов передается в REST-запросе
+SELECT films.*, rating_MPA.mpa 
+FROM user_liked_film AS likes 
+RIGHT OUTER JOIN films ON likes.film_id = films.id
+LEFT OUTER JOIN rating_MPA ON films.mpa_id = rating_MPA.id
+GROUP BY films.id
+ORDER BY COUNT(likes.user_id) DESC 
+LIMIT ?;
+-- количество фильмов передается в REST-запросе
 ```
 
 * жанров фильма (по идентификатору)
 ```SQL
-SELECT * 
-FROM genres 
-WHERE id IN (SELECT genre_id 
-            FROM film_genres 
-            WHERE film_id = ?);
+SELECT g.* 
+FROM film_genres AS fg
+INNER JOIN genres AS g ON fg.genre_id = g.id
+WHERE fg.film_id = ?;
 ```
 
 * друзей пользователя (по идентификатору пользователя)
 
 ```SQL
 SELECT *
-FROM users
-WHERE id IN (SELECT friend_id 
-            FROM friends
-            WHERE owner_id = ?);
-```
-
-* общих друзей
-```SQL
-SELECT * FROM users WHERE id IN (SELECT friend_id AS mutual 
-                                FROM friends 
-                                WHERE owner_id = ?    -- для пользователя **1**
-                                INTERSECT 
-                                SELECT friend_id 
-                                FROM friends 
-                                WHERE owner_id = ?);  -- для пользователя **2**
+FROM users AS u 
+INNER JOIN friends AS f ON f.friend_id = u.id 
+WHERE f.owner_id = ?;
 ```
 
 * жанров в ДБ (ФП-11.2)
