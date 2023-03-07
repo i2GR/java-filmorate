@@ -23,7 +23,7 @@ import java.util.*;
  */
 @Slf4j
 @Primary
-@Repository("filmDBStorage")
+@Repository
 @RequiredArgsConstructor
 public class DBFilmStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
@@ -35,7 +35,6 @@ public class DBFilmStorage implements FilmStorage {
         log.info("SQL request for Film create id");
         return insertFilmToDB(sqlQuery, film);
     }
-
 
     @Override
     public Optional<Film> readById(Long filmId) {

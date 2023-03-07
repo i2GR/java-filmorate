@@ -54,8 +54,6 @@ public class UserController implements BasicModelHandling<User> {
         return userService.readAll();
     }
 
-
-
     /**
      * список пользователей, являющихся его друзьями
      * @param id дентификатор пользователя список друзей которого формируется

@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service.genre;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -19,7 +18,6 @@ import java.util.Optional;
  * ТЗ-11
  */
 @Slf4j
-@Primary
 @Service
 @RequiredArgsConstructor
 public class DBGenreService implements GenreServable {

@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Primary
-@Repository("userDBStorage")
+@Repository
 @RequiredArgsConstructor
 public class DBUserStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;

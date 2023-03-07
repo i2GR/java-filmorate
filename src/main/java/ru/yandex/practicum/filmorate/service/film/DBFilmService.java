@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import java.util.*;
 public class DBFilmService implements FilmServable {
 
     @NonNull
-    @Qualifier("filmDBStorage")
     private final FilmStorage filmDBStorage;
 
     @NonNull

@@ -21,7 +21,7 @@ import java.util.Optional;
  * ТЗ-11
  */
 @Slf4j
-@Repository("friendDBStorage")
+@Repository
 @RequiredArgsConstructor
 public class DBFriendStorage implements FriendsStorable {
 

@@ -14,7 +14,7 @@ import java.util.Optional;
  * реализация ервис-слоя CRUD-функционала для статуса друзей
  */
 @Slf4j
-@Service("friendDBService")
+@Service
 @Primary
 @RequiredArgsConstructor
 public class DBFriendService implements FriendServable {

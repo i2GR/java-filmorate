@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.dao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Repository("mpaDBStorage")
+@Primary
+@Repository
 @RequiredArgsConstructor
 public class DBMpaRateStorage implements MpaRateStorable {
 

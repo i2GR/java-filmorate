@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 
 @Slf4j
-@Repository("genreDBStorage")
+@Repository
 @RequiredArgsConstructor
 public class DBGenreStorage implements GenreStorable {
     private final JdbcTemplate jdbcTemplate;

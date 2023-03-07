@@ -23,7 +23,7 @@ import java.util.Set;
  */
 @Slf4j
 @Primary
-@Repository("likeDBStorage")
+@Repository
 @RequiredArgsConstructor
 public class DBLikeStorage implements LikeStorable {
 
@@ -37,18 +37,21 @@ public class DBLikeStorage implements LikeStorable {
         return updateLikeInDB(sqlQuery, like);
     }
 
+    @Override
     public boolean read(Like like) {
         String sqlQuery = "SELECT * FROM user_liked_film WHERE user_id = ? AND film_id = ?;";
         log.info("SQL request fo read like from user {} to Film {}", like.getUserId(), like.getFilmId());
         return readLikeFromDB(sqlQuery, like).isPresent();
     }
 
+    @Override
     public Optional<Like> delete(Like like) {
         String sqlQuery = "DELETE FROM user_liked_film WHERE user_id = ? AND film_id = ?;";
         log.info("SQL request fo delete like from user {} to Film {}", like.getUserId(), like.getFilmId());
         return updateLikeInDB(sqlQuery, like);
     }
 
+    @Override
     public Set<Long> getUsersForFilmById(Long filmId) {
         String sqlQuery = "SELECT user_id "
                 + "FROM  user_liked_film "

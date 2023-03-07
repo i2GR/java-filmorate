@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -31,9 +30,8 @@ public class DBUserService implements UserServable {
      * хранилище в БД
      */
     @NonNull
-    @Qualifier("userDBStorage")
     private final UserStorage userDBStorage;
-    private final DBFriendStorage friendDBstorage;
+    private final DBFriendStorage friendDBStorage;
 
     /**
      * создание пользователя в БД
@@ -77,16 +75,16 @@ public class DBUserService implements UserServable {
 
     @Override
     public List<User> getMutualFriends(Long userId1, Long userId2) {
-        Set<User> friendsList1 = new HashSet<>(friendDBstorage.getAllFriends(userId1));
+        Set<User> friendsList1 = new HashSet<>(friendDBStorage.getAllFriends(userId1));
         log.info("received data from DB for user {}", userId1);
-        Set<User> friendsList2 = new HashSet<>(friendDBstorage.getAllFriends(userId2));
+        Set<User> friendsList2 = new HashSet<>(friendDBStorage.getAllFriends(userId2));
         log.info("received data from DB for user {}", userId1);
         return friendsList1.stream().filter(friendsList2::contains).collect(Collectors.toList());
     }
 
     @Override
     public List<User> getAllFriends(Long id) {
-        List<User> friendList = friendDBstorage.getAllFriends(id);
+        List<User> friendList = friendDBStorage.getAllFriends(id);
         log.info("received data from DB: {}", friendList.size());
         return friendList;
     }
