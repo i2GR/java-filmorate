@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dao.DBFriendsStorage;
+import ru.yandex.practicum.filmorate.dao.DBFriendStorage;
 import ru.yandex.practicum.filmorate.model.entity.User;
 import ru.yandex.practicum.filmorate.storage.entity.user.UserStorage;
 
@@ -33,7 +33,7 @@ public class DBUserService implements UserServable {
     @NonNull
     @Qualifier("userDBStorage")
     private final UserStorage userDBStorage;
-    private final DBFriendsStorage friendDBstorage;
+    private final DBFriendStorage friendDBstorage;
 
     /**
      * создание пользователя в БД

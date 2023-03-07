@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class DBFriendsStorageTest {
+class DBFriendStorageTest {
 
-    private final DBFriendsStorage friendStorage;
+    private final DBFriendStorage friendStorage;
     private final DBUserStorage userStorage;
     private final JdbcTemplate jdbcTemplate;
     private final User user3 = User.builder().name("user3").login("user3").email("test@mail.ru").birthday(LocalDate.EPOCH).build();

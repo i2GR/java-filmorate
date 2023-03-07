@@ -2,14 +2,12 @@ package ru.yandex.practicum.filmorate.service.like;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.DBLikeStorage;
 import ru.yandex.practicum.filmorate.model.activity.Like;
 import ru.yandex.practicum.filmorate.model.entity.Film;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +27,6 @@ public class DBLikeService implements LikeServable{
      * хранилище в БД
      */
     @NonNull
-    @Autowired
     private DBLikeStorage likeDBstorage;
 
     @Override

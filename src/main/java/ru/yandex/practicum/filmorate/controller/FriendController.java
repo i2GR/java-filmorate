@@ -20,10 +20,10 @@ import ru.yandex.practicum.filmorate.service.friend.FriendServable;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
-public class FriendsController {
+public class FriendController {
 
     @NonNull
-    @Qualifier("userDBStorage")
+    @Qualifier("friendDBService")
     private final FriendServable service;
 
     /**
